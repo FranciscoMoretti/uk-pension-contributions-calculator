@@ -8,6 +8,7 @@ interface TaxBreakdownProps {
 
 export function TaxBreakdown({ grossSalary, pensionContribution }: TaxBreakdownProps) {
   const { taxableIncome, incomeTax, ni, totalTax, netTakeHome, incomeTaxBands, niBands } = calculateTax(grossSalary, pensionContribution)
+  const totalTaxPercentage = (totalTax / grossSalary) * 100
 
   return (
     <div className="space-y-6">
@@ -89,6 +90,12 @@ export function TaxBreakdown({ grossSalary, pensionContribution }: TaxBreakdownP
             <TableRow className="border-t-4">
               <TableCell className="font-medium">Total Tax</TableCell>
               <TableCell className="text-right font-medium text-red-500">-£{Math.round(totalTax).toLocaleString()}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">Total Tax % (of gross salary)</TableCell>
+              <TableCell className="text-right font-medium text-red-500">
+                {totalTaxPercentage.toFixed(1)}%
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>

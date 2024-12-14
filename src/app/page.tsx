@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { generateChartData } from "@/utils/taxCalculations"
 import { PensionChart } from "@/components/PensionChart"
 import { TaxBreakdown } from "@/components/TaxBreakdown"
+import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown"
 import { Slider } from "@/components/ui/slider"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -22,6 +23,8 @@ import {
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
   pensionContribution: z.number().min(0).max(60000),
+  potValue: z.number().min(0),
+  annualWithdrawal: z.number().min(0),
 })
 
 const handleNumberInput = (value: string) => {
@@ -36,14 +39,14 @@ export default function PensionCalculator() {
     defaultValues: {
       grossSalary: 50000,
       pensionContribution: 5000,
+      potValue: 500000,
+      annualWithdrawal: 25000,
     },
   })
 
-  const { grossSalary, pensionContribution } = form.watch()
+  const { grossSalary, pensionContribution, potValue, annualWithdrawal } = form.watch()
   
   const chartData = generateChartData(grossSalary, pensionContribution)
-
-  
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // This is just for form validation, we're using the values directly via watch()
@@ -53,7 +56,10 @@ export default function PensionCalculator() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">UK Pension Calculator</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      {/* Contribution Section */}
+      <h2 className="text-2xl font-bold mb-4">Pension Contributions</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
             <CardTitle>Input Details</CardTitle>
@@ -116,7 +122,6 @@ export default function PensionCalculator() {
                               className="w-[200px]"
                             />
                           </div>
-                          
                         </div>
                       </FormControl>
                       <FormDescription>
@@ -132,7 +137,7 @@ export default function PensionCalculator() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Results</CardTitle>
+            <CardTitle>Salary Tax Breakdown</CardTitle>
             <CardDescription>Breakdown of your finances</CardDescription>
           </CardHeader>
           <CardContent>
@@ -143,7 +148,8 @@ export default function PensionCalculator() {
           </CardContent>
         </Card>
       </div>
-      <Card className="mt-6">
+
+      <Card className="mb-8">
         <CardHeader>
           <CardTitle>Pension Contribution Analysis</CardTitle>
           <CardDescription>Impact of varying pension contributions on take-home pay, tax, and pension</CardDescription>
@@ -154,6 +160,89 @@ export default function PensionCalculator() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Withdrawal Section */}
+      <h2 className="text-2xl font-bold mb-4">Pension Withdrawals</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Withdrawal Details</CardTitle>
+            <CardDescription>Enter your pension pot value and desired annual withdrawal</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {/* Pot Value Input */}
+                <FormField
+                  control={form.control}
+                  name="potValue"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pension Pot Value</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium">£</span>
+                          <Input
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            {...field}
+                            value={field.value === 0 ? '' : field.value}
+                            onChange={e => field.onChange(handleNumberInput(e.target.value))}
+                            className="w-[200px]"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Tax-free portion is 25% up to £1,073,100 pot value
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Annual Withdrawal Input */}
+                <FormField
+                  control={form.control}
+                  name="annualWithdrawal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Annual Withdrawal</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium">£</span>
+                          <Input
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            {...field}
+                            value={field.value === 0 ? '' : field.value}
+                            onChange={e => field.onChange(handleNumberInput(e.target.value))}
+                            className="w-[200px]"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Withdrawal Tax Breakdown</CardTitle>
+            <CardDescription>Analysis of taxes on pension withdrawals</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <WithdrawalBreakdown 
+              potValue={potValue}
+              annualWithdrawal={annualWithdrawal}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

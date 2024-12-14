@@ -5,10 +5,7 @@ export interface TaxBand {
   taxPaid: number;
 }
 
-export function calculateTax(grossSalary: number, pensionContribution: number) {
-  const taxableIncome = grossSalary - pensionContribution;
-
-  // Income Tax bands calculation
+export function calculateIncomeTaxBands(taxableIncome: number): TaxBand[] {
   const incomeTaxBands: TaxBand[] = [
     { name: "Personal Allowance", rate: 0, amount: 0, taxPaid: 0 },
     { name: "Basic Rate", rate: 20, amount: 0, taxPaid: 0 },
@@ -45,7 +42,10 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
     band.taxPaid = band.amount * (band.rate / 100);
   });
 
-  // NI bands calculation
+  return incomeTaxBands;
+}
+
+export function calculateNIBands(taxableIncome: number): TaxBand[] {
   const niBands: TaxBand[] = [
     { name: "Standard Rate", rate: 8, amount: 0, taxPaid: 0 },
     { name: "Higher Rate", rate: 2, amount: 0, taxPaid: 0 },
@@ -63,6 +63,14 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
     band.taxPaid = band.amount * (band.rate / 100);
   });
 
+  return niBands;
+}
+
+export function calculateTax(grossSalary: number, pensionContribution: number) {
+  const taxableIncome = grossSalary - pensionContribution;
+  const incomeTaxBands = calculateIncomeTaxBands(taxableIncome);
+  const niBands = calculateNIBands(taxableIncome);
+
   const incomeTax = incomeTaxBands.reduce((total, band) => total + band.taxPaid, 0);
   const ni = niBands.reduce((total, band) => total + band.taxPaid, 0);
   const totalTax = incomeTax + ni;
@@ -76,6 +84,31 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
     ni,
     totalTax,
     netTakeHome,
+  };
+}
+
+export function calculatePensionWithdrawal(potValue: number, annualWithdrawal: number) {
+  const TAX_FREE_POT_LIMIT = 1073100;
+  
+  // Calculate tax-free portion
+  const taxFreePortion = potValue <= TAX_FREE_POT_LIMIT ? 0.25 : (TAX_FREE_POT_LIMIT * 0.25) / potValue;
+  const taxFreeAmount = annualWithdrawal * taxFreePortion;
+  const taxableAmount = annualWithdrawal - taxFreeAmount;
+
+  // Calculate income tax on the taxable portion
+  const incomeTaxBands = calculateIncomeTaxBands(taxableAmount);
+  const incomeTax = incomeTaxBands.reduce((total, band) => total + band.taxPaid, 0);
+  const totalTax = incomeTax; // No NI on pension withdrawals
+  const netWithdrawal = annualWithdrawal - totalTax;
+
+  return {
+    taxFreePortion,
+    taxFreeAmount,
+    taxableAmount,
+    incomeTaxBands,
+    incomeTax,
+    totalTax,
+    netWithdrawal,
   };
 }
 

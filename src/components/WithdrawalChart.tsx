@@ -5,7 +5,6 @@ import {
   CartesianGrid,
   XAxis,
   YAxis,
-  Legend,
   ReferenceLine,
   ComposedChart,
 } from "recharts";
@@ -13,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
   ChartTooltip,
 } from "@/components/ui/chart";
 
@@ -48,26 +48,23 @@ export function WithdrawalChart({
   const maxWithdrawal = Math.max(...data.map(d => d.withdrawal));
 
   return (
-    <Card>
+    <Card >
       <CardHeader>
         <CardTitle>Withdrawal Breakdown</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <ComposedChart data={data} margin={{ left: 12, right: 12, top: 20 }} height={400}>
+      <CardContent >
+        <ChartContainer config={chartConfig} >
+          <ComposedChart  data={data} margin={{ left: 12, right: 12, top: 20 }} height={400}>
             <CartesianGrid vertical={false} />
             <XAxis
+              className="py-10"
               dataKey="withdrawal"
               type="number"
               domain={[0, maxWithdrawal]}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              label={{
-                value: "Annual Withdrawal (£)",
-                position: "bottom",
-                offset: 0,
-              }}
+
               tickFormatter={(value) => `£${value.toLocaleString()}`}
             />
             <YAxis
@@ -158,7 +155,7 @@ export function WithdrawalChart({
                 fill: "var(--foreground)",
               }}
             />
-            <Legend
+            <ChartLegend
               verticalAlign="top"
               height={36}
               formatter={(value) =>

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { generateChartData, generateWithdrawalChartData } from "@/utils/taxCalculations"
+import { calculatePensionWithdrawal, generateChartData, generateWithdrawalChartData } from "@/utils/taxCalculations"
 import { PensionChart } from "@/components/PensionChart"
 import { TaxBreakdown } from "@/components/TaxBreakdown"
 import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown"
@@ -45,10 +45,16 @@ export default function PensionCalculator() {
     },
   })
 
-  const { grossSalary, pensionContribution, potValue, annualWithdrawal } = form.watch()
+  const { grossSalary, pensionContribution, potValue, annualWithdrawal: annualPensionWithdrawal } = form.watch()
   
-  const chartData = generateChartData(grossSalary, pensionContribution)
-  const withdrawalChartData = generateWithdrawalChartData(potValue, annualWithdrawal)
+  const withdrawalChartData = generateWithdrawalChartData(potValue, annualPensionWithdrawal)
+  const { totalTax: totalPensionWithdrawalTax } = calculatePensionWithdrawal(potValue, annualPensionWithdrawal);
+
+  const chartData = generateChartData(grossSalary, pensionContribution).map(item => ({
+    ...item,
+    taxPensionPercentage: Math.round((totalPensionWithdrawalTax / annualPensionWithdrawal) * 1000) / 10,
+    combinedTaxPercentage: Math.round((totalPensionWithdrawalTax / annualPensionWithdrawal * 100 + item.taxSalaryPercentage) * 10) / 10,
+  }))
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // This is just for form validation, we're using the values directly via watch()
@@ -240,7 +246,7 @@ export default function PensionCalculator() {
           <CardContent>
             <WithdrawalBreakdown 
               potValue={potValue}
-              annualWithdrawal={annualWithdrawal}
+              annualWithdrawal={annualPensionWithdrawal}
             />
           </CardContent>
         </Card>
@@ -253,7 +259,7 @@ export default function PensionCalculator() {
         </CardHeader>
         <CardContent>
           <div className="">
-            <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualWithdrawal} />
+            <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualPensionWithdrawal} />
           </div>
         </CardContent>
       </Card>

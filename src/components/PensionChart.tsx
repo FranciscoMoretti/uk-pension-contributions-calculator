@@ -2,7 +2,6 @@
 
 import {
   Area,
-  AreaChart,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -24,6 +23,9 @@ interface ChartData {
   tax: number;
   pensionContribution: number;
   marginalRelief: number;
+  taxSalaryPercentage: number;
+  taxPensionPercentage: number;
+  combinedTaxPercentage: number;
 }
 
 const chartConfig = {
@@ -42,6 +44,18 @@ const chartConfig = {
   marginalRelief: {
     label: "Tax Relief Rate",
     color: "hsl(var(--chart-4))",
+  },
+  taxSalaryPercentage: {
+    label: "Tax Salary %",
+    color: "hsl(var(--chart-5))",
+  },
+  taxPensionPercentage: {
+    label: "Tax Pension Withdrawal %",
+    color: "hsl(var(--chart-6))",
+  },
+  combinedTaxPercentage: {
+    label: "Combined Tax %",
+    color: "hsl(var(--foreground))",
   },
 } satisfies ChartConfig;
 
@@ -70,11 +84,7 @@ export function PensionChart({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              label={{
-                value: "Pension Contributions (£)",
-                position: "bottom",
-                offset: 0,
-              }}
+
               tickFormatter={(value) => `£${value.toLocaleString()}`}
             />
             <YAxis
@@ -101,39 +111,72 @@ export function PensionChart({
                     <div className="text-sm font-medium">
                       Contributing £{payload[0]?.payload.pension.toLocaleString()}
                     </div>
-                    <div className="text-sm font-medium text-muted-foreground">
-                      Tax Relief Rate: {payload.find(p => p.name === 'marginalRelief')?.value}%
-                    </div>
-                    {payload.filter(entry => entry.name !== 'marginalRelief').map((entry: any) => (
-                      <div
-                        key={entry.name}
-                        className="flex items-center gap-2 text-sm w-full justify-between"
-                      >
-                        <div className="flex gap-1 items-center">
+                    <div className="border-t pt-2">
+                      <div className="text-sm font-medium">Tax Rates:</div>
+                      {payload
+                        .filter(p => p.name.includes('Percentage') || p.name === 'marginalRelief')
+                        .map((entry: any) => (
                           <div
-                            className="w-2 h-2 rounded-full"
-                            style={{
-                              backgroundColor:
-                                chartConfig[
-                                  entry.name as keyof typeof chartConfig
-                                ].color,
-                            }}
-                          />
-                          <span>
-                            {
-                              chartConfig[
-                                entry.name as keyof typeof chartConfig
-                              ].label
-                            }
-                            :
-                          </span>
-                        </div>
-
-                        <span className="font-medium">
-                          £{Math.round(entry.value).toLocaleString()}
-                        </span>
-                      </div>
-                    ))}
+                            key={entry.name}
+                            className="flex items-center gap-2 text-sm w-full justify-between"
+                          >
+                            <div className="flex gap-1 items-center">
+                              <div
+                                className="w-2 h-2 rounded-full"
+                                style={{
+                                  backgroundColor:
+                                    chartConfig[
+                                      entry.name as keyof typeof chartConfig
+                                    ].color,
+                                }}
+                              />
+                              <span>
+                                {
+                                  chartConfig[
+                                    entry.name as keyof typeof chartConfig
+                                  ].label
+                                }
+                                :
+                              </span>
+                            </div>
+                            <span className="font-medium">{entry.value}%</span>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="border-t pt-2">
+                      <div className="text-sm font-medium">Money Breakdown:</div>
+                      {payload
+                        .filter(p => !p.name.includes('Percentage') && p.name !== 'marginalRelief')
+                        .map((entry: any) => (
+                          <div
+                            key={entry.name}
+                            className="flex items-center gap-2 text-sm w-full justify-between"
+                          >
+                            <div className="flex gap-1 items-center">
+                              <div
+                                className="w-2 h-2 rounded-full"
+                                style={{
+                                  backgroundColor:
+                                    chartConfig[
+                                      entry.name as keyof typeof chartConfig
+                                    ].color,
+                                }}
+                              />
+                              <span>
+                                {
+                                  chartConfig[
+                                    entry.name as keyof typeof chartConfig
+                                  ].label
+                                }
+                                :
+                              </span>
+                            </div>
+                            <span className="font-medium">
+                              £{Math.round(entry.value).toLocaleString()}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 );
               }}
@@ -146,7 +189,8 @@ export function PensionChart({
               type="monotone"
               fill="var(--color-takeHome)"
               stroke="var(--color-takeHome)"
-              fillOpacity={0.4}
+              fillOpacity={0.6}
+              strokeWidth={1.5}
             />
             <Area
               yAxisId="left"
@@ -155,7 +199,8 @@ export function PensionChart({
               type="monotone"
               fill="var(--color-pensionContribution)"
               stroke="var(--color-pensionContribution)"
-              fillOpacity={0.4}
+              fillOpacity={0.6}
+              strokeWidth={1.5}
             />
             <Area
               yAxisId="left"
@@ -164,14 +209,40 @@ export function PensionChart({
               type="monotone"
               fill="var(--color-tax)"
               stroke="var(--color-tax)"
-              fillOpacity={0.1}
+              fillOpacity={0.4}
+              strokeWidth={1.5}
             />
             <Line
               yAxisId="right"
               type="monotone"
               dataKey="marginalRelief"
               stroke="var(--color-marginalRelief)"
-              strokeWidth={2}
+              strokeWidth={3}
+              dot={false}
+              strokeDasharray="4 2"
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="taxSalaryPercentage"
+              stroke="var(--color-taxSalaryPercentage)"
+              strokeWidth={2.5}
+              dot={false}
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="taxPensionPercentage"
+              stroke="var(--color-taxPensionPercentage)"
+              strokeWidth={2.5}
+              dot={false}
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="combinedTaxPercentage"
+              stroke="var(--color-combinedTaxPercentage)"
+              strokeWidth={3}
               dot={false}
             />
             <ReferenceLine

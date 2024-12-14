@@ -79,6 +79,20 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
   };
 }
 
+export function calculateMarginalRelief(grossSalary: number, pensionContribution: number) {
+  // Calculate tax with current contribution
+  const current = calculateTax(grossSalary, pensionContribution);
+  
+  // Calculate tax with £1 more contribution
+  const withExtra = calculateTax(grossSalary, pensionContribution + 1);
+  
+  // The marginal relief is how much less you pay in tax for that £1
+  const taxDifference = current.totalTax - withExtra.totalTax;
+  
+  // Return as a percentage (e.g., 0.4 for 40% relief)
+  return taxDifference;
+}
+
 export function generateChartData(grossSalary: number, pensionContribution: number) {
   const data = [];
   const maxContribution = Math.min(grossSalary, 60000);
@@ -87,22 +101,26 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
   // Generate points from 0 to maxContribution
   for (let pension = 0; pension <= maxContribution; pension += step) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, pension);
+    const marginalRelief = calculateMarginalRelief(grossSalary, pension);
     data.push({
       pension,
       takeHome: netTakeHome,
       tax: totalTax,
       pensionContribution: pension,
+      marginalRelief: Math.round(marginalRelief * 100), // Convert to percentage
     });
   }
 
   // Add gross salary point if it's not already included and is less than maxContribution
   if (grossSalary <= maxContribution && grossSalary % step !== 0) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, grossSalary);
+    const marginalRelief = calculateMarginalRelief(grossSalary, grossSalary);
     const newPoint = {
       pension: grossSalary,
       takeHome: netTakeHome,
       tax: totalTax,
       pensionContribution: grossSalary,
+      marginalRelief: Math.round(marginalRelief * 100),
     };
     
     // Find the correct position to insert the point
@@ -118,11 +136,13 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
   if (pensionContribution > 0 && pensionContribution <= maxContribution) {
     if (!data.some(point => point.pension === pensionContribution)) {
       const { netTakeHome, totalTax } = calculateTax(grossSalary, pensionContribution);
+      const marginalRelief = calculateMarginalRelief(grossSalary, pensionContribution);
       const newPoint = {
         pension: pensionContribution,
         takeHome: netTakeHome,
         tax: totalTax,
         pensionContribution,
+        marginalRelief: Math.round(marginalRelief * 100),
       };
       
       // Find the correct position to insert the point

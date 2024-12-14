@@ -8,13 +8,14 @@ import {
   YAxis,
   Legend,
   ReferenceLine,
+  Line,
+  ComposedChart,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 
 interface ChartData {
@@ -22,6 +23,7 @@ interface ChartData {
   takeHome: number;
   tax: number;
   pensionContribution: number;
+  marginalRelief: number;
 }
 
 const chartConfig = {
@@ -37,6 +39,10 @@ const chartConfig = {
     label: "Tax",
     color: "hsl(var(--chart-2))",
   },
+  marginalRelief: {
+    label: "Tax Relief Rate",
+    color: "hsl(var(--chart-4))",
+  },
 } satisfies ChartConfig;
 
 export function PensionChart({
@@ -46,7 +52,6 @@ export function PensionChart({
   data: ChartData[];
   currentPension: number;
 }) {
-  // Get the maximum pension value from the data
   const maxPension = Math.max(...data.map(d => d.pension));
 
   return (
@@ -56,7 +61,7 @@ export function PensionChart({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart data={data} margin={{ left: 12, right: 12 }} height={400}>
+          <ComposedChart data={data} margin={{ left: 12, right: 12, top: 20 }} height={400}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="pension"
@@ -73,10 +78,20 @@ export function PensionChart({
               tickFormatter={(value) => `£${value.toLocaleString()}`}
             />
             <YAxis
+              yAxisId="left"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => `£${value.toLocaleString()}`}
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              domain={[0, 100]}
+              tickFormatter={(value) => `${value}%`}
             />
             <ChartTooltip
               content={({ active, payload }) => {
@@ -86,7 +101,10 @@ export function PensionChart({
                     <div className="text-sm font-medium">
                       Contributing £{payload[0]?.payload.pension.toLocaleString()}
                     </div>
-                    {payload.map((entry: any) => (
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Tax Relief Rate: {payload.find(p => p.name === 'marginalRelief')?.value}%
+                    </div>
+                    {payload.filter(entry => entry.name !== 'marginalRelief').map((entry: any) => (
                       <div
                         key={entry.name}
                         className="flex items-center gap-2 text-sm w-full justify-between"
@@ -122,6 +140,7 @@ export function PensionChart({
             />
 
             <Area
+              yAxisId="left"
               dataKey="takeHome"
               stackId="a"
               type="monotone"
@@ -130,6 +149,7 @@ export function PensionChart({
               fillOpacity={0.4}
             />
             <Area
+              yAxisId="left"
               dataKey="pensionContribution"
               stackId="a"
               type="monotone"
@@ -138,6 +158,7 @@ export function PensionChart({
               fillOpacity={0.4}
             />
             <Area
+              yAxisId="left"
               dataKey="tax"
               stackId="a"
               type="monotone"
@@ -145,8 +166,17 @@ export function PensionChart({
               stroke="var(--color-tax)"
               fillOpacity={0.1}
             />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="marginalRelief"
+              stroke="var(--color-marginalRelief)"
+              strokeWidth={2}
+              dot={false}
+            />
             <ReferenceLine
               x={currentPension}
+              yAxisId="left"
               stroke="hsl(var(--foreground))"
               strokeDasharray="3 3"
               label={{
@@ -162,7 +192,7 @@ export function PensionChart({
                 chartConfig[value as keyof typeof chartConfig].label
               }
             />
-          </AreaChart>
+          </ComposedChart>
         </ChartContainer>
       </CardContent>
     </Card>

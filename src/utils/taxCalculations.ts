@@ -79,18 +79,62 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
   };
 }
 
-export function generateChartData(grossSalary: number) {
+export function generateChartData(grossSalary: number, pensionContribution: number) {
   const data = [];
   const maxContribution = Math.min(grossSalary, 60000);
-  for (let pension = 0; pension <= maxContribution; pension += 1000) {
+  const step = 1000;
+
+  // Generate points from 0 to maxContribution
+  for (let pension = 0; pension <= maxContribution; pension += step) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, pension);
     data.push({
-      pension: pension.toString(),
+      pension,
       takeHome: netTakeHome,
       tax: totalTax,
       pensionContribution: pension,
     });
   }
+
+  // Add gross salary point if it's not already included and is less than maxContribution
+  if (grossSalary <= maxContribution && grossSalary % step !== 0) {
+    const { netTakeHome, totalTax } = calculateTax(grossSalary, grossSalary);
+    const newPoint = {
+      pension: grossSalary,
+      takeHome: netTakeHome,
+      tax: totalTax,
+      pensionContribution: grossSalary,
+    };
+    
+    // Find the correct position to insert the point
+    const insertIndex = data.findIndex(point => point.pension > grossSalary);
+    if (insertIndex === -1) {
+      data.push(newPoint);
+    } else {
+      data.splice(insertIndex, 0, newPoint);
+    }
+  }
+
+  // Add the current pension contribution point if it's not already included
+  if (pensionContribution > 0 && pensionContribution <= maxContribution) {
+    if (!data.some(point => point.pension === pensionContribution)) {
+      const { netTakeHome, totalTax } = calculateTax(grossSalary, pensionContribution);
+      const newPoint = {
+        pension: pensionContribution,
+        takeHome: netTakeHome,
+        tax: totalTax,
+        pensionContribution,
+      };
+      
+      // Find the correct position to insert the point
+      const insertIndex = data.findIndex(point => point.pension > pensionContribution);
+      if (insertIndex === -1) {
+        data.push(newPoint);
+      } else {
+        data.splice(insertIndex, 0, newPoint);
+      }
+    }
+  }
+
   return data;
 }
 

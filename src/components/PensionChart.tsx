@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/chart";
 
 interface ChartData {
-  pension: string;
+  pension: number;
   takeHome: number;
   tax: number;
   pensionContribution: number;
@@ -46,6 +46,9 @@ export function PensionChart({
   data: ChartData[];
   currentPension: number;
 }) {
+  // Get the maximum pension value from the data
+  const maxPension = Math.max(...data.map(d => d.pension));
+
   return (
     <Card>
       <CardHeader>
@@ -57,6 +60,8 @@ export function PensionChart({
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="pension"
+              type="number"
+              domain={[0, maxPension]}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -65,13 +70,13 @@ export function PensionChart({
                 position: "bottom",
                 offset: 0,
               }}
-              tickFormatter={(value) => `£${value}`}
+              tickFormatter={(value) => `£${value.toLocaleString()}`}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => `£${value}`}
+              tickFormatter={(value) => `£${value.toLocaleString()}`}
             />
             <ChartTooltip
               content={({ active, payload }) => {
@@ -79,7 +84,7 @@ export function PensionChart({
                 return (
                   <div className="rounded-lg border bg-background p-2 shadow-sm flex flex-col gap-2">
                     <div className="text-sm font-medium">
-                      Contributing £{payload[0]?.payload.pension}
+                      Contributing £{payload[0]?.payload.pension.toLocaleString()}
                     </div>
                     {payload.map((entry: any) => (
                       <div
@@ -107,7 +112,7 @@ export function PensionChart({
                         </div>
 
                         <span className="font-medium">
-                          £{entry.value.toFixed(0)}
+                          £{Math.round(entry.value).toLocaleString()}
                         </span>
                       </div>
                     ))}
@@ -119,7 +124,7 @@ export function PensionChart({
             <Area
               dataKey="takeHome"
               stackId="a"
-              type="natural"
+              type="monotone"
               fill="var(--color-takeHome)"
               stroke="var(--color-takeHome)"
               fillOpacity={0.4}
@@ -127,7 +132,7 @@ export function PensionChart({
             <Area
               dataKey="pensionContribution"
               stackId="a"
-              type="natural"
+              type="monotone"
               fill="var(--color-pensionContribution)"
               stroke="var(--color-pensionContribution)"
               fillOpacity={0.4}
@@ -135,13 +140,13 @@ export function PensionChart({
             <Area
               dataKey="tax"
               stackId="a"
-              type="natural"
+              type="monotone"
               fill="var(--color-tax)"
               stroke="var(--color-tax)"
               fillOpacity={0.1}
             />
             <ReferenceLine
-              x={String(currentPension)}
+              x={currentPension}
               stroke="hsl(var(--foreground))"
               strokeDasharray="3 3"
               label={{

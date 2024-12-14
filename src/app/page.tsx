@@ -42,7 +42,10 @@ export default function PensionCalculator() {
   })
 
   const { grossSalary, pensionContribution } = form.watch()
-  const chartData = generateChartData(grossSalary)
+  
+  const chartData = generateChartData(grossSalary, pensionContribution)
+  
+  
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // This is just for form validation, we're using the values directly via watch()

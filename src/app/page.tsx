@@ -2,10 +2,11 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { generateChartData } from "@/utils/taxCalculations"
+import { generateChartData, generateWithdrawalChartData } from "@/utils/taxCalculations"
 import { PensionChart } from "@/components/PensionChart"
 import { TaxBreakdown } from "@/components/TaxBreakdown"
 import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown"
+import { WithdrawalChart } from "@/components/WithdrawalChart"
 import { Slider } from "@/components/ui/slider"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -47,6 +48,7 @@ export default function PensionCalculator() {
   const { grossSalary, pensionContribution, potValue, annualWithdrawal } = form.watch()
   
   const chartData = generateChartData(grossSalary, pensionContribution)
+  const withdrawalChartData = generateWithdrawalChartData(potValue, annualWithdrawal)
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // This is just for form validation, we're using the values directly via watch()
@@ -163,7 +165,7 @@ export default function PensionCalculator() {
 
       {/* Withdrawal Section */}
       <h2 className="text-2xl font-bold mb-4">Pension Withdrawals</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader>
             <CardTitle>Withdrawal Details</CardTitle>
@@ -243,6 +245,18 @@ export default function PensionCalculator() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Withdrawal Analysis</CardTitle>
+          <CardDescription>Impact of varying withdrawal amounts on tax and take-home amount</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="">
+            <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualWithdrawal} />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

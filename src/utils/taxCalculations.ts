@@ -191,3 +191,41 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
   return data;
 }
 
+export function generateWithdrawalChartData(potValue: number, currentWithdrawal: number) {
+  const data = [];
+  const step = 1000;
+  const maxWithdrawal = Math.min(potValue, 150000); // Reasonable max for visualization
+
+  // Generate points from 0 to maxWithdrawal
+  for (let withdrawal = 0; withdrawal <= maxWithdrawal; withdrawal += step) {
+    const { taxFreeAmount, totalTax, netWithdrawal } = calculatePensionWithdrawal(potValue, withdrawal);
+    data.push({
+      withdrawal,
+      taxFree: taxFreeAmount,
+      tax: totalTax,
+      taxable: netWithdrawal - taxFreeAmount, // The taxed portion that you get to keep
+    });
+  }
+
+  // Add current withdrawal point if not already included
+  if (currentWithdrawal > 0 && currentWithdrawal <= maxWithdrawal && currentWithdrawal % step !== 0) {
+    const { taxFreeAmount, totalTax, netWithdrawal } = calculatePensionWithdrawal(potValue, currentWithdrawal);
+    const newPoint = {
+      withdrawal: currentWithdrawal,
+      taxFree: taxFreeAmount,
+      tax: totalTax,
+      taxable: netWithdrawal - taxFreeAmount,
+    };
+    
+    // Find the correct position to insert the point
+    const insertIndex = data.findIndex(point => point.withdrawal > currentWithdrawal);
+    if (insertIndex === -1) {
+      data.push(newPoint);
+    } else {
+      data.splice(insertIndex, 0, newPoint);
+    }
+  }
+
+  return data;
+}
+

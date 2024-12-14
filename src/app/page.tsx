@@ -1,9 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { generateChartData } from "@/utils/taxCalculations"
 import { PensionChart } from "@/components/PensionChart"
 import { TaxBreakdown } from "@/components/TaxBreakdown"
@@ -44,7 +42,7 @@ export default function PensionCalculator() {
   const { grossSalary, pensionContribution } = form.watch()
   
   const chartData = generateChartData(grossSalary, pensionContribution)
-  
+
   
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -151,7 +149,7 @@ export default function PensionCalculator() {
           <CardDescription>Impact of varying pension contributions on take-home pay, tax, and pension</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px]">
+          <div className="">
             <PensionChart data={chartData} currentPension={pensionContribution} />
           </div>
         </CardContent>

@@ -41,8 +41,8 @@ export function SalaryBreakdownChart({
       currentValue={currentPension}
       xAxisKey="pension"
       areas={["takeHome", "pensionContribution", "tax"]}
-      showPercentages={false}
       tooltipLabel="Salary Breakdown"
+      hideRightAxis={true}
     />
   );
 }

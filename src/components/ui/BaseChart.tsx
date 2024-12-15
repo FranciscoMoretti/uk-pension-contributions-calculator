@@ -30,6 +30,7 @@ interface BaseChartProps {
   height?: number;
   showPercentages?: boolean;
   tooltipLabel?: string;
+  hideRightAxis?: boolean;
 }
 
 export function BaseChart({
@@ -48,8 +49,12 @@ export function BaseChart({
   height = 400,
   showPercentages = false,
   tooltipLabel,
+  hideRightAxis = false,
 }: BaseChartProps) {
   const maxX = Math.max(...data.map(d => d[xAxisKey]));
+  const yAxisFormatter = showPercentages 
+    ? (value: number) => `${value}%`
+    : (value: number) => `£${value.toLocaleString()}`;
 
   return (
     <Card>
@@ -61,7 +66,7 @@ export function BaseChart({
         <ChartContainer config={config}>
           <ComposedChart 
             data={data} 
-            margin={{ left: 12, right: 12, top: 20 }} 
+            margin={{ left: 12, right: hideRightAxis ? 12 : 48, top: 20 }} 
             height={height}
           >
             <CartesianGrid vertical={false} />
@@ -79,18 +84,21 @@ export function BaseChart({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={leftAxisFormatter}
+              tickFormatter={yAxisFormatter}
+              domain={showPercentages ? [0, 100] : undefined}
             />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              domain={[0, 100]}
-              tickFormatter={rightAxisFormatter}
-            />
-           <ChartTooltip
+            {!hideRightAxis && (
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                domain={[0, 100]}
+                tickFormatter={rightAxisFormatter}
+              />
+            )}
+            <ChartTooltip
               content={({ active, payload }) => (
                 <ChartTooltipContent
                   active={active}
@@ -118,10 +126,10 @@ export function BaseChart({
               />
             ))}
 
-            {lines.map((key, index) => (
+            {lines.map((key) => (
               <Line
                 key={key}
-                yAxisId="right"
+                yAxisId={showPercentages ? "left" : "right"}
                 type="monotone"
                 dataKey={key}
                 stroke={`var(--color-${key})`}

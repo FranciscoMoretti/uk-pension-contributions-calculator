@@ -53,6 +53,7 @@ export function TaxComparisonChart({
       ]}
       showPercentages={true}
       tooltipLabel="Tax Rate Comparison"
+      hideRightAxis={true}
     />
   );
 } 

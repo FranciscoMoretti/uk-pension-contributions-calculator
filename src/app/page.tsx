@@ -246,17 +246,9 @@ export default function PensionCalculator() {
         </Card>
       </div>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Withdrawal Analysis</CardTitle>
-          <CardDescription>Impact of varying withdrawal amounts on tax and take-home amount</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="">
+
             <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualPensionWithdrawal} />
-          </div>
-        </CardContent>
-      </Card>
+
     </div>
   )
 }

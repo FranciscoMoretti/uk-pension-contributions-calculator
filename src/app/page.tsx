@@ -3,7 +3,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { calculatePensionWithdrawal, generateChartData, generateWithdrawalChartData } from "@/utils/taxCalculations"
-import { PensionChart } from "@/components/PensionChart"
+import { SalaryBreakdownChart } from "@/components/SalaryBreakdownChart"
+import { TaxComparisonChart } from "@/components/TaxComparisonChart"
 import { TaxBreakdown } from "@/components/TaxBreakdown"
 import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown"
 import { WithdrawalChart } from "@/components/WithdrawalChart"
@@ -157,17 +158,10 @@ export default function PensionCalculator() {
         </Card>
       </div>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Pension Contribution Analysis</CardTitle>
-          <CardDescription>Impact of varying pension contributions on take-home pay, tax, and pension</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="">
-            <PensionChart data={chartData} currentPension={pensionContribution} />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-8">
+        <SalaryBreakdownChart data={chartData} currentPension={pensionContribution} />
+        <TaxComparisonChart data={chartData} currentPension={pensionContribution} />
+      </div>
 
       {/* Withdrawal Section */}
       <h2 className="text-2xl font-bold mb-4">Pension Withdrawals</h2>

@@ -14,7 +14,9 @@ import {
   ChartContainer,
   ChartLegend,
   ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
+
 
 interface ChartData {
   withdrawal: number;
@@ -25,11 +27,11 @@ interface ChartData {
 
 const chartConfig = {
   taxFree: {
-    label: "Tax-Free Amount",
+    label: "Tax-Free",
     color: "hsl(var(--chart-3))",
   },
   taxable: {
-    label: "Taxed Amount",
+    label: "Taxed",
     color: "hsl(var(--chart-1))",
   },
   tax: {
@@ -75,46 +77,17 @@ export function WithdrawalChart({
               tickFormatter={(value) => `£${value.toLocaleString()}`}
             />
             <ChartTooltip
-              content={({ active, payload }) => {
-                if (!active || !payload) return null;
-                return (
-                  <div className="rounded-lg border bg-background p-2 shadow-sm flex flex-col gap-2">
-                    <div className="text-sm font-medium">
-                      Withdrawing £{payload[0]?.payload.withdrawal.toLocaleString()}
-                    </div>
-                    {payload.map((entry: any) => (
-                      <div
-                        key={entry.name}
-                        className="flex items-center gap-2 text-sm w-full justify-between"
-                      >
-                        <div className="flex gap-1 items-center">
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{
-                              backgroundColor:
-                                chartConfig[
-                                  entry.name as keyof typeof chartConfig
-                                ].color,
-                            }}
-                          />
-                          <span>
-                            {
-                              chartConfig[
-                                entry.name as keyof typeof chartConfig
-                              ].label
-                            }
-                            :
-                          </span>
-                        </div>
-
-                        <span className="font-medium">
-                          £{Math.round(entry.value).toLocaleString()}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                );
-              }}
+              content={({ active, payload }) => (
+                <ChartTooltipContent
+                  active={active}
+                  payload={payload?.map(p => ({
+                    ...p,
+                    value: `£${p.value?.toLocaleString()}`,
+                  }))}
+                  className="min-w-[10rem]"
+                  label="Withdrawal"
+                />
+              )}
             />
 
             <Area

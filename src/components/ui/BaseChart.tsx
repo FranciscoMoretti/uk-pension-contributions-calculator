@@ -129,13 +129,13 @@ export function BaseChart({
             {lines.map((key) => (
               <Line
                 key={key}
-                yAxisId={showPercentages ? "left" : "right"}
+                yAxisId="left"
                 type="monotone"
                 dataKey={key}
                 stroke={`var(--color-${key})`}
-                strokeWidth={key.includes('combined') ? 3 : 2.5}
+                strokeWidth={key.includes('combined') ? 3 : 2}
                 dot={false}
-                strokeDasharray={key === 'marginalRelief' ? "4 2" : undefined}
+                strokeDasharray={key === 'marginalRelief' ? "4 2" : "3 3"}
               />
             ))}
 

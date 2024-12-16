@@ -57,7 +57,7 @@ export default function PensionCalculator() {
     combinedTaxPercentage: Math.round((withdrawalTaxPercentage + item.taxSalaryPercentage) * 10) / 10,
     pensionAfterWithdrawal: item.pension * (1 - withdrawalTaxPercentage),
     pensionWithdrawalTax: item.pension * withdrawalTaxPercentage,
-    net: item.takeHome - item.pension * (1 - withdrawalTaxPercentage), // take home (salary after tax) + pension after withdrawal tax
+    net: item.takeHome + item.pension * (1 - withdrawalTaxPercentage/100), // take home (salary after tax) + pension after withdrawal tax
   }))
 
   function onSubmit(values: z.infer<typeof formSchema>) {

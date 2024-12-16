@@ -8,20 +8,25 @@ interface ChartData {
   takeHome: number;
   tax: number;
   pensionContribution: number;
+  net: number;
 }
 
 const chartConfig = {
   takeHome: {
     label: "Take Home",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-2))",
   },
   pensionContribution: {
     label: "Pension",
     color: "hsl(var(--chart-3))",
   },
   tax: {
-    label: "Tax",
-    color: "hsl(var(--chart-2))",
+    label: "Salary Tax",
+    color: "hsl(var(--chart-1))",
+  },
+  net: {
+    label: "Net After Pension Tax",
+    color: "hsl(var(--foreground))",
   },
 } satisfies ChartConfig;
 
@@ -41,6 +46,7 @@ export function SalaryBreakdownChart({
       currentValue={currentPension}
       xAxisKey="pension"
       areas={["takeHome", "pensionContribution", "tax"]}
+      lines={["net"]}
       tooltipLabel="Salary Breakdown"
       hideRightAxis={true}
     />

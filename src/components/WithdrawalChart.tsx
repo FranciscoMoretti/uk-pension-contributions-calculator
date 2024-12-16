@@ -16,7 +16,7 @@ const chartConfig = {
     color: "hsl(var(--chart-3))",
   },
   taxable: {
-    label: "Taxed",
+    label: "Taxable",
     color: "hsl(var(--chart-1))",
   },
   tax: {
@@ -45,4 +45,4 @@ export function WithdrawalChart({
       hideRightAxis={true}
     />
   );
-} 
+}

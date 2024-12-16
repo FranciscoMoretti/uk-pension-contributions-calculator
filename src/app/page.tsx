@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { calculatePensionWithdrawal, generateChartData, generateWithdrawalChartData } from "@/utils/taxCalculations"
+import { calculatePensionWithdrawal, generateChartData as generateValuesPerContributionData, generateWithdrawalChartData } from "@/utils/taxCalculations"
 import { SalaryBreakdownChart } from "@/components/SalaryBreakdownChart"
 import { TaxComparisonChart } from "@/components/TaxComparisonChart"
 import { TaxBreakdown } from "@/components/TaxBreakdown"
@@ -49,12 +49,15 @@ export default function PensionCalculator() {
   const { grossSalary, pensionContribution, potValue, annualWithdrawal: annualPensionWithdrawal } = form.watch()
   
   const withdrawalChartData = generateWithdrawalChartData(potValue, annualPensionWithdrawal)
-  const { totalTax: totalPensionWithdrawalTax } = calculatePensionWithdrawal(potValue, annualPensionWithdrawal);
+  const { withdrawalTaxPercentage} = calculatePensionWithdrawal(potValue, annualPensionWithdrawal);
 
-  const chartData = generateChartData(grossSalary, pensionContribution).map(item => ({
+  const valuesByContrutributionData = generateValuesPerContributionData(grossSalary, pensionContribution).map(item => ({
     ...item,
-    taxPensionPercentage: Math.round((totalPensionWithdrawalTax / annualPensionWithdrawal) * 1000) / 10,
-    combinedTaxPercentage: Math.round((totalPensionWithdrawalTax / annualPensionWithdrawal * 100 + item.taxSalaryPercentage) * 10) / 10,
+    taxPensionPercentage: Math.round((withdrawalTaxPercentage) * 10) / 10,
+    combinedTaxPercentage: Math.round((withdrawalTaxPercentage + item.taxSalaryPercentage) * 10) / 10,
+    pensionAfterWithdrawal: item.pension * (1 - withdrawalTaxPercentage),
+    pensionWithdrawalTax: item.pension * withdrawalTaxPercentage,
+    net: item.takeHome - item.pension * (1 - withdrawalTaxPercentage), // take home (salary after tax) + pension after withdrawal tax
   }))
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -159,8 +162,8 @@ export default function PensionCalculator() {
       </div>
 
       <div className="grid gap-8">
-        <SalaryBreakdownChart data={chartData} currentPension={pensionContribution} />
-        <TaxComparisonChart data={chartData} currentPension={pensionContribution} />
+        <SalaryBreakdownChart data={valuesByContrutributionData} currentPension={pensionContribution} />
+        <TaxComparisonChart data={valuesByContrutributionData} currentPension={pensionContribution} />
       </div>
 
       {/* Withdrawal Section */}

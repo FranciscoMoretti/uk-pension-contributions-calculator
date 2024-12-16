@@ -100,7 +100,8 @@ export function calculatePensionWithdrawal(potValue: number, annualWithdrawal: n
   const incomeTax = incomeTaxBands.reduce((total, band) => total + band.taxPaid, 0);
   const totalTax = incomeTax; // No NI on pension withdrawals
   const netWithdrawal = annualWithdrawal - totalTax;
-
+  const withdrawalTaxPercentage = (totalTax / annualWithdrawal) * 100;
+  
   return {
     taxFreePortion,
     taxFreeAmount,
@@ -109,6 +110,7 @@ export function calculatePensionWithdrawal(potValue: number, annualWithdrawal: n
     incomeTax,
     totalTax,
     netWithdrawal,
+    withdrawalTaxPercentage,
   };
 }
 

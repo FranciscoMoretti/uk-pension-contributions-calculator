@@ -104,7 +104,7 @@ export function BaseChart({
                   active={active}
                   payload={payload?.map(p => ({
                     ...p,
-                    value: showPercentages ? `${p.value?.toFixed(0)}%` : `£${p.value?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+                    value: showPercentages ? `${p.value?.toFixed(1)}%` : `£${p.value?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
                   }))}
                   className="min-w-[10rem]"
                   label={tooltipLabel}

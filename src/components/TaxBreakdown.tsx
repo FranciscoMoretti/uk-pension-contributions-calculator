@@ -1,14 +1,32 @@
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { calculateTax } from "@/utils/taxCalculations"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { calculateTax } from "@/utils/taxCalculations";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ChevronDown } from "lucide-react";
 
 interface TaxBreakdownProps {
-  grossSalary: number
-  pensionContribution: number
+  grossSalary: number;
+  pensionContribution: number;
 }
 
-export function TaxBreakdown({ grossSalary, pensionContribution }: TaxBreakdownProps) {
-  const { taxableIncome, incomeTax, ni, totalTax, netTakeHome, incomeTaxBands, niBands } = calculateTax(grossSalary, pensionContribution)
-  const totalTaxPercentage = (totalTax / grossSalary) * 100
+export function TaxBreakdown({
+  grossSalary,
+  pensionContribution,
+}: TaxBreakdownProps) {
+  const {
+    taxableIncome,
+    incomeTax,
+    ni,
+    totalTax,
+    netTakeHome,
+    incomeTaxBands,
+    niBands,
+  } = calculateTax(grossSalary, pensionContribution);
+  const totalTaxPercentage = (totalTax / grossSalary) * 100;
 
   return (
     <div className="space-y-6">
@@ -19,15 +37,21 @@ export function TaxBreakdown({ grossSalary, pensionContribution }: TaxBreakdownP
           <TableBody>
             <TableRow>
               <TableCell>Gross Salary</TableCell>
-              <TableCell className="text-right">£{grossSalary.toLocaleString()}</TableCell>
+              <TableCell className="text-right">
+                £{grossSalary.toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Pension Contribution</TableCell>
-              <TableCell className="text-right text-red-500">-£{pensionContribution.toLocaleString()}</TableCell>
+              <TableCell className="text-right text-red-500">
+                -£{pensionContribution.toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow className="border-t">
               <TableCell className="font-medium">Taxable Income</TableCell>
-              <TableCell className="text-right font-medium">£{taxableIncome.toLocaleString()}</TableCell>
+              <TableCell className="text-right font-medium">
+                £{taxableIncome.toLocaleString()}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -36,63 +60,109 @@ export function TaxBreakdown({ grossSalary, pensionContribution }: TaxBreakdownP
       {/* Tax Breakdown */}
       <div>
         <h3 className="text-sm font-medium mb-2">Tax Breakdown</h3>
-        <Table>
+        <Accordion type="multiple" className="">
+          {/* Income Tax Bands */}
+          <AccordionItem value="income-tax" className="border-0">
+            <Table>
+              <TableBody>
+                <AccordionTrigger
+                  asChild
+                  className="hover:no-underline py-0 [&[data-state=open]_svg]:rotate-180"
+                >
+                  <TableRow className="w-full">
+                    <TableCell className="relative pl-4 font-medium flex gap-2 p-0">
+                      <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+                      Income Tax
+                    </TableCell>
+                    <TableCell className="text-right font-medium text-red-500">
+                      -£{Math.round(incomeTax).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                </AccordionTrigger>
+              </TableBody>
+            </Table>
+            <AccordionContent className="pt-0">
+              <Table>
+                <TableBody>
+                  {incomeTaxBands.map(
+                    (band) =>
+                      band.amount > 0 && (
+                        <TableRow key={band.name}>
+                          <TableCell className="">
+                            {band.name} ({band.rate}%)
+                            <div className="text-xs text-muted-foreground">
+                              £{band.amount.toLocaleString()} @ {band.rate}%
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right text-red-500">
+                            -£{Math.round(band.taxPaid).toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                      )
+                  )}
+                </TableBody>
+              </Table>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* NI Bands */}
+          <AccordionItem value="ni" className="border-0 mt-0 py-0 border-t">
+            <Table>
+              <TableBody>
+                <AccordionTrigger
+                  asChild
+                  className="hover:no-underline py-0 [&[data-state=open]_svg]:rotate-180 "
+                >
+                  <TableRow className="w-full">
+                    <TableCell className="relative pl-4 font-medium flex gap-2 p-0">
+                      <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 " />
+                      National Insurance
+                    </TableCell>
+                    <TableCell className="text-right font-medium text-red-500 ">
+                      -£{Math.round(ni).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                </AccordionTrigger>
+              </TableBody>
+            </Table>
+            <AccordionContent className="pt-0">
+              <Table>
+                <TableBody>
+                  {niBands.map(
+                    (band) =>
+                      band.amount > 0 && (
+                        <TableRow key={band.name}>
+                          <TableCell className="">
+                            {band.name} ({band.rate}%)
+                            <div className="text-xs text-muted-foreground">
+                              £{band.amount.toLocaleString()} @ {band.rate}%
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right text-red-500 ">
+                            -£{Math.round(band.taxPaid).toLocaleString()}
+                          </TableCell>
+                        </TableRow>
+                      )
+                  )}
+                </TableBody>
+              </Table>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        {/* Totals */}
+        <Table className="">
           <TableBody>
-            {/* Income Tax Bands */}
-            <TableRow className="bg-muted/50">
-              <TableCell colSpan={2} className="font-medium">Income Tax Bands</TableCell>
-            </TableRow>
-            {incomeTaxBands.map((band) => 
-              band.amount > 0 && (
-                <TableRow key={band.name}>
-                  <TableCell className="pl-4">
-                    {band.name} ({band.rate}%)
-                    <div className="text-xs text-muted-foreground">
-                      £{band.amount.toLocaleString()} @ {band.rate}%
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right text-red-500">
-                    -£{Math.round(band.taxPaid).toLocaleString()}
-                  </TableCell>
-                </TableRow>
-              )
-            )}
             <TableRow className="border-t">
-              <TableCell className="font-medium">Total Income Tax</TableCell>
-              <TableCell className="text-right font-medium text-red-500">-£{Math.round(incomeTax).toLocaleString()}</TableCell>
-            </TableRow>
-
-            {/* NI Bands */}
-            <TableRow className="bg-muted/50 border-t-4">
-              <TableCell colSpan={2} className="font-medium">National Insurance Bands</TableCell>
-            </TableRow>
-            {niBands.map((band) => 
-              band.amount > 0 && (
-                <TableRow key={band.name}>
-                  <TableCell className="pl-4">
-                    {band.name} ({band.rate}%)
-                    <div className="text-xs text-muted-foreground">
-                      £{band.amount.toLocaleString()} @ {band.rate}%
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right text-red-500">
-                    -£{Math.round(band.taxPaid).toLocaleString()}
-                  </TableCell>
-                </TableRow>
-              )
-            )}
-            <TableRow className="border-t">
-              <TableCell className="font-medium">Total National Insurance</TableCell>
-              <TableCell className="text-right font-medium text-red-500">-£{Math.round(ni).toLocaleString()}</TableCell>
-            </TableRow>
-
-            {/* Total Tax */}
-            <TableRow className="border-t-4">
               <TableCell className="font-medium">Total Tax</TableCell>
-              <TableCell className="text-right font-medium text-red-500">-£{Math.round(totalTax).toLocaleString()}</TableCell>
+              <TableCell className="text-right font-medium text-red-500">
+                -£{Math.round(totalTax).toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="font-medium">Total Tax % (of gross salary)</TableCell>
+              <TableCell className="font-medium">
+                Total Tax % (of gross salary)
+              </TableCell>
               <TableCell className="text-right font-medium text-red-500">
                 {totalTaxPercentage.toFixed(1)}%
               </TableCell>
@@ -108,15 +178,22 @@ export function TaxBreakdown({ grossSalary, pensionContribution }: TaxBreakdownP
           <TableBody>
             <TableRow>
               <TableCell className="font-medium">Net Take Home</TableCell>
-              <TableCell className="text-right font-medium">£{Math.round(netTakeHome).toLocaleString()}</TableCell>
+              <TableCell className="text-right font-medium">
+                £{Math.round(netTakeHome).toLocaleString()}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="font-medium">Net Take Home + Pension</TableCell>
-              <TableCell className="text-right font-medium">£{Math.round(netTakeHome + pensionContribution).toLocaleString()}</TableCell>
+              <TableCell className="font-medium">
+                Net Take Home + Pension
+              </TableCell>
+              <TableCell className="text-right font-medium">
+                £
+                {Math.round(netTakeHome + pensionContribution).toLocaleString()}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </div>
     </div>
-  )
-} 
+  );
+}

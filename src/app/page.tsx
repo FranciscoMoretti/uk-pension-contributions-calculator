@@ -69,18 +69,17 @@ export default function PensionCalculator() {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">UK Pension Calculator</h1>
       
-      {/* Contribution Section */}
-      <h2 className="text-2xl font-bold mb-4">Pension Contributions</h2>
+      {/* All Inputs Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Salary & Contribution Inputs */}
         <Card>
           <CardHeader>
-            <CardTitle>Input Details</CardTitle>
+            <CardTitle>Salary & Contribution</CardTitle>
             <CardDescription>Enter your salary and pension contribution</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Salary Input */}
                 <FormField
                   control={form.control}
                   name="grossSalary"
@@ -106,7 +105,6 @@ export default function PensionCalculator() {
                   )}
                 />
 
-                {/* Pension Input */}
                 <FormField
                   control={form.control}
                   name="pensionContribution"
@@ -115,13 +113,13 @@ export default function PensionCalculator() {
                       <FormLabel>Yearly Pension Contribution</FormLabel>
                       <FormControl>
                         <div className="space-y-4 flex gap-4 items-center flex-wrap">
-                            <Slider
-                              value={[field.value]}
-                              onValueChange={([value]) => field.onChange(value)}
-                              max={Math.min(grossSalary, 60000)}
-                              step={100}
-                              className="min-w-[200px] flex-1"
-                            />
+                          <Slider
+                            value={[field.value]}
+                            onValueChange={([value]) => field.onChange(value)}
+                            max={Math.min(grossSalary, 60000)}
+                            step={100}
+                            className="min-w-[200px] flex-1"
+                          />
                           <div className="flex items-center space-x-2 min-w-[100px]">
                             <span className="text-sm font-medium">£</span>
                             <Input
@@ -147,37 +145,16 @@ export default function PensionCalculator() {
             </Form>
           </CardContent>
         </Card>
+
+        {/* Pension Withdrawal Inputs */}
         <Card>
           <CardHeader>
-            <CardTitle>Salary Tax Breakdown</CardTitle>
-            <CardDescription>Breakdown of your finances</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <TaxBreakdown 
-              grossSalary={grossSalary} 
-              pensionContribution={pensionContribution} 
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-8">
-        <SalaryBreakdownChart data={valuesByContrutributionData} currentPension={pensionContribution} />
-        <TaxComparisonChart data={valuesByContrutributionData} currentPension={pensionContribution} />
-      </div>
-
-      {/* Withdrawal Section */}
-      <h2 className="text-2xl font-bold mb-4">Pension Withdrawals</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Withdrawal Details</CardTitle>
+            <CardTitle>Pension Withdrawal</CardTitle>
             <CardDescription>Enter your pension pot value and desired annual withdrawal</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Pot Value Input */}
                 <FormField
                   control={form.control}
                   name="potValue"
@@ -206,7 +183,6 @@ export default function PensionCalculator() {
                   )}
                 />
 
-                {/* Annual Withdrawal Input */}
                 <FormField
                   control={form.control}
                   name="annualWithdrawal"
@@ -235,6 +211,23 @@ export default function PensionCalculator() {
             </Form>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Tax Breakdowns Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Salary Tax Breakdown</CardTitle>
+            <CardDescription>Breakdown of your finances</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <TaxBreakdown 
+              grossSalary={grossSalary} 
+              pensionContribution={pensionContribution} 
+            />
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Withdrawal Tax Breakdown</CardTitle>
@@ -249,10 +242,14 @@ export default function PensionCalculator() {
         </Card>
       </div>
 
+      {/* Charts Section */}
+      <div className="grid gap-8 mb-8">
+        <SalaryBreakdownChart data={valuesByContrutributionData} currentPension={pensionContribution} />
+        <TaxComparisonChart data={valuesByContrutributionData} currentPension={pensionContribution} />
+      </div>
 
-            <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualPensionWithdrawal} />
-
+      <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualPensionWithdrawal} />
     </div>
-  )
+  );
 }
 

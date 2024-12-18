@@ -135,8 +135,6 @@ export default function PensionCalculator() {
     console.log(values);
   }
 
-  console.log("render");
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">UK Pension Calculator</h1>

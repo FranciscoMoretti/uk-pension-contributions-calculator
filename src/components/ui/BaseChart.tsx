@@ -26,7 +26,7 @@ import {
 // import { ChartTooltip } from "@/components/ui/chart-tooltip";
 
 interface BaseChartProps {
-  data: any[];
+  data: unknown[];
   config: ChartConfig;
   title: string;
   description?: string;
@@ -53,7 +53,6 @@ export function BaseChart({
   currentLabel = "Current",
   xAxisKey,
   xAxisFormatter = (value) => `£${value.toLocaleString()}`,
-  leftAxisFormatter = (value) => `£${value.toLocaleString()}`,
   rightAxisFormatter = (value) => `${value}%`,
   areas = [],
   lines = [],
@@ -116,7 +115,7 @@ export function BaseChart({
                   payload={payload?.map((p) => ({
                     ...p,
                     value: showPercentages
-                      ? `${p.value?.toFixed(1)}%`
+                      ? `${Number(p.value)?.toFixed(1)}%`
                       : `£${p.value?.toLocaleString("en-GB", {
                           maximumFractionDigits: 0,
                         })}`,

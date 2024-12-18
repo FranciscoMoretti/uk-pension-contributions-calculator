@@ -33,6 +33,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { MarginalROIChart } from "@/components/MarginalROIChart";
+import { useDeferredValue } from "react";
 
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
@@ -72,18 +73,25 @@ export default function PensionCalculator() {
     annualWithdrawal: annualPensionWithdrawal,
   } = form.watch();
 
-  const withdrawalChartData = generateWithdrawalChartData(
-    potValue,
-    annualPensionWithdrawal
-  );
-  const { withdrawalTaxRate } = calculatePensionWithdrawal(
-    potValue,
+  const deferredGrossSalary = useDeferredValue(grossSalary);
+  const deferredPensionContribution = useDeferredValue(pensionContribution);
+  const deferredPotValue = useDeferredValue(potValue);
+  const deferredAnnualPensionWithdrawal = useDeferredValue(
     annualPensionWithdrawal
   );
 
+  const withdrawalChartData = generateWithdrawalChartData(
+    deferredPotValue,
+    deferredAnnualPensionWithdrawal
+  );
+  const { withdrawalTaxRate } = calculatePensionWithdrawal(
+    deferredPotValue,
+    deferredAnnualPensionWithdrawal
+  );
+
   const valuesByContrutributionData = generateValuesPerContributionData(
-    grossSalary,
-    pensionContribution
+    deferredGrossSalary,
+    deferredPensionContribution
   ).map((item) => ({
     ...item,
     taxSalaryPercentage: Number((item.taxSalaryRate * 100).toFixed(1)),
@@ -296,8 +304,8 @@ export default function PensionCalculator() {
           </CardHeader>
           <CardContent>
             <TaxBreakdown
-              grossSalary={grossSalary}
-              pensionContribution={pensionContribution}
+              grossSalary={deferredGrossSalary}
+              pensionContribution={deferredPensionContribution}
             />
           </CardContent>
         </Card>
@@ -311,8 +319,8 @@ export default function PensionCalculator() {
           </CardHeader>
           <CardContent>
             <WithdrawalBreakdown
-              potValue={potValue}
-              annualWithdrawal={annualPensionWithdrawal}
+              potValue={deferredPotValue}
+              annualWithdrawal={deferredAnnualPensionWithdrawal}
             />
           </CardContent>
         </Card>
@@ -322,21 +330,21 @@ export default function PensionCalculator() {
       <div className="grid gap-8 mb-8">
         <SalaryBreakdownChart
           data={valuesByContrutributionData}
-          currentPension={pensionContribution}
+          currentPension={deferredPensionContribution}
         />
         <MarginalROIChart
           data={valuesByContrutributionData}
-          currentPension={pensionContribution}
+          currentPension={deferredPensionContribution}
         />
         <TaxComparisonChart
           data={valuesByContrutributionData}
-          currentPension={pensionContribution}
+          currentPension={deferredPensionContribution}
         />
       </div>
 
       <WithdrawalChart
         data={withdrawalChartData}
-        currentWithdrawal={annualPensionWithdrawal}
+        currentWithdrawal={deferredAnnualPensionWithdrawal}
       />
     </div>
   );

@@ -64,24 +64,15 @@ export function WithdrawalBreakdown({
         <h3 className="text-sm font-medium mb-2">Tax Breakdown</h3>
         <Accordion type="multiple">
           <AccordionItem value="income-tax" className="border-0">
-            <Table>
-              <TableBody>
-                <AccordionTrigger
-                  asChild
-                  className="hover:no-underline py-0 [&[data-state=open]_svg]:rotate-180"
-                >
-                  <TableRow className="w-full">
-                    <TableCell className="relative pl-4 font-medium flex gap-2 p-0">
-                      <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
-                      Income Tax
-                    </TableCell>
-                    <TableCell className="text-right font-medium text-red-500">
-                      -£{Math.round(totalTax).toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                </AccordionTrigger>
-              </TableBody>
-            </Table>
+            <AccordionTrigger className="hover:no-underline py-2 [&[data-state=open]_svg]:rotate-180 w-full flex justify-between items-center hover:bg-muted/50 px-1.5">
+              <div className="flex gap-2 items-center">
+                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+                <span>Income Tax</span>
+              </div>
+              <span className="text-right font-medium text-red-500">
+                -£{Math.round(totalTax).toLocaleString()}
+              </span>
+            </AccordionTrigger>
             <AccordionContent className="pt-0">
               <Table>
                 <TableBody>

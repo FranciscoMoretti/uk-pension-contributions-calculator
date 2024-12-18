@@ -26,7 +26,8 @@ import {
 // import { ChartTooltip } from "@/components/ui/chart-tooltip";
 
 interface BaseChartProps {
-  data: unknown[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any[];
   config: ChartConfig;
   title: string;
   description?: string;

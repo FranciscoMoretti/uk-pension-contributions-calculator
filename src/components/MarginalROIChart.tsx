@@ -40,7 +40,7 @@ export function MarginalROIChart({
       data={processedData}
       config={chartConfig}
       title="Pension Investment ROI"
-      description="Comparison of take-home returns with and without pension investment"
+      description="Comparison of take-home returns with and without going through the pension"
       currentValue={currentPension}
       xAxisKey="pension"
       lines={["baselineReturn", "pensionBoost"]}

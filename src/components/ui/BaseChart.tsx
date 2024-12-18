@@ -10,8 +10,19 @@ import {
   Line,
   ComposedChart,
 } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 // import { ChartTooltip } from "@/components/ui/chart-tooltip";
 
 interface BaseChartProps {
@@ -51,8 +62,8 @@ export function BaseChart({
   tooltipLabel,
   hideRightAxis = false,
 }: BaseChartProps) {
-  const maxX = Math.max(...data.map(d => d[xAxisKey]));
-  const yAxisFormatter = showPercentages 
+  const maxX = Math.max(...data.map((d) => d[xAxisKey]));
+  const yAxisFormatter = showPercentages
     ? (value: number) => `${value}%`
     : (value: number) => `£${value.toLocaleString()}`;
 
@@ -64,9 +75,9 @@ export function BaseChart({
       </CardHeader>
       <CardContent>
         <ChartContainer config={config}>
-          <ComposedChart 
-            data={data} 
-            margin={{ left: 12, right: hideRightAxis ? 12 : 48, top: 20 }} 
+          <ComposedChart
+            data={data}
+            margin={{ left: 12, right: hideRightAxis ? 12 : 48, top: 20 }}
             height={height}
           >
             <CartesianGrid vertical={false} />
@@ -102,9 +113,13 @@ export function BaseChart({
               content={({ active, payload }) => (
                 <ChartTooltipContent
                   active={active}
-                  payload={payload?.map(p => ({
+                  payload={payload?.map((p) => ({
                     ...p,
-                    value: showPercentages ? `${p.value?.toFixed(1)}%` : `£${p.value?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+                    value: showPercentages
+                      ? `${p.value?.toFixed(1)}%`
+                      : `£${p.value?.toLocaleString("en-GB", {
+                          maximumFractionDigits: 0,
+                        })}`,
                   }))}
                   className="min-w-[10rem]"
                   label={tooltipLabel}
@@ -112,7 +127,7 @@ export function BaseChart({
               )}
             />
 
-            {areas.map(key => (
+            {areas.map((key) => (
               <Area
                 key={key}
                 yAxisId="left"
@@ -133,9 +148,9 @@ export function BaseChart({
                 type="monotone"
                 dataKey={key}
                 stroke={`var(--color-${key})`}
-                strokeWidth={key.includes('combined') ? 3 : 2}
+                strokeWidth={key.includes("combined") ? 3 : 2}
                 dot={false}
-                strokeDasharray={key === 'marginalRelief' ? "4 2" : "3 3"}
+                // strokeDasharray={key === 'marginalRelief' ? "4 2" : "3 3"}
               />
             ))}
 
@@ -156,13 +171,11 @@ export function BaseChart({
             <Legend
               verticalAlign="top"
               height={36}
-              formatter={(value) =>
-                config[value as keyof typeof config].label
-              }
+              formatter={(value) => config[value as keyof typeof config].label}
             />
           </ComposedChart>
         </ChartContainer>
       </CardContent>
     </Card>
   );
-} 
+}

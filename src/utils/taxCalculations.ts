@@ -25,7 +25,10 @@ export function calculateIncomeTaxBands(taxableIncome: number): TaxBand[] {
     incomeTaxBands[3].amount = taxableIncome - 100000;
     incomeTaxBands[2].amount = 49730; // 100000 - 50270
     incomeTaxBands[1].amount = 37700; // 50270 - 12570
-    incomeTaxBands[0].amount = Math.max(0, 12570 - (taxableIncome - 100000) / 2);
+    incomeTaxBands[0].amount = Math.max(
+      0,
+      12570 - (taxableIncome - 100000) / 2
+    );
   } else if (taxableIncome > 50270) {
     incomeTaxBands[2].amount = taxableIncome - 50270;
     incomeTaxBands[1].amount = 37700; // 50270 - 12570
@@ -38,7 +41,7 @@ export function calculateIncomeTaxBands(taxableIncome: number): TaxBand[] {
   }
 
   // Calculate tax paid for each band
-  incomeTaxBands.forEach(band => {
+  incomeTaxBands.forEach((band) => {
     band.taxPaid = band.amount * (band.rate / 100);
   });
 
@@ -59,7 +62,7 @@ export function calculateNIBands(taxableIncome: number): TaxBand[] {
   }
 
   // Calculate NI tax paid for each band
-  niBands.forEach(band => {
+  niBands.forEach((band) => {
     band.taxPaid = band.amount * (band.rate / 100);
   });
 
@@ -71,7 +74,10 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
   const incomeTaxBands = calculateIncomeTaxBands(taxableIncome);
   const niBands = calculateNIBands(taxableIncome);
 
-  const incomeTax = incomeTaxBands.reduce((total, band) => total + band.taxPaid, 0);
+  const incomeTax = incomeTaxBands.reduce(
+    (total, band) => total + band.taxPaid,
+    0
+  );
   const ni = niBands.reduce((total, band) => total + band.taxPaid, 0);
   const totalTax = incomeTax + ni;
   const netTakeHome = taxableIncome - totalTax;
@@ -87,21 +93,30 @@ export function calculateTax(grossSalary: number, pensionContribution: number) {
   };
 }
 
-export function calculatePensionWithdrawal(potValue: number, annualWithdrawal: number) {
+export function calculatePensionWithdrawal(
+  potValue: number,
+  annualWithdrawal: number
+) {
   const TAX_FREE_POT_LIMIT = 1073100;
-  
+
   // Calculate tax-free portion
-  const taxFreePortion = potValue <= TAX_FREE_POT_LIMIT ? 0.25 : (TAX_FREE_POT_LIMIT * 0.25) / potValue;
+  const taxFreePortion =
+    potValue <= TAX_FREE_POT_LIMIT
+      ? 0.25
+      : (TAX_FREE_POT_LIMIT * 0.25) / potValue;
   const taxFreeAmount = annualWithdrawal * taxFreePortion;
   const taxableAmount = annualWithdrawal - taxFreeAmount;
 
   // Calculate income tax on the taxable portion
   const incomeTaxBands = calculateIncomeTaxBands(taxableAmount);
-  const incomeTax = incomeTaxBands.reduce((total, band) => total + band.taxPaid, 0);
+  const incomeTax = incomeTaxBands.reduce(
+    (total, band) => total + band.taxPaid,
+    0
+  );
   const totalTax = incomeTax; // No NI on pension withdrawals
   const netWithdrawal = annualWithdrawal - totalTax;
   const withdrawalTaxPercentage = (totalTax / annualWithdrawal) * 100;
-  
+
   return {
     taxFreePortion,
     taxFreeAmount,
@@ -114,43 +129,43 @@ export function calculatePensionWithdrawal(potValue: number, annualWithdrawal: n
   };
 }
 
-export function calculateMarginalRelief(grossSalary: number, pensionContribution: number) {
+export function calculateMarginalRelief(
+  grossSalary: number,
+  pensionContribution: number
+) {
   // Calculate tax with current contribution
   const current = calculateTax(grossSalary, pensionContribution);
-  
+
   // Calculate tax with £1 more contribution
   const withExtra = calculateTax(grossSalary, pensionContribution + 1);
-  
+
   // The marginal relief is how much less you pay in tax for that £1
   const taxDifference = current.totalTax - withExtra.totalTax;
-  
+
   // Return as a percentage (e.g., 0.4 for 40% relief)
   return taxDifference;
 }
 
-export function generateChartData(grossSalary: number, pensionContribution: number) {
+export function generateChartData(
+  grossSalary: number,
+  pensionContribution: number
+) {
   const data = [];
   const maxContribution = Math.min(grossSalary, 60000);
   const step = 1000;
 
-
   // Generate points from 0 to maxContribution
   for (let pension = 0; pension <= maxContribution; pension += step) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, pension);
-    const marginalRelief = calculateMarginalRelief(grossSalary, pension);
-    
     // Calculate salary tax percentage
     const taxSalaryPercentage = (totalTax / grossSalary) * 100;
-    
 
     data.push({
       pension,
       takeHome: netTakeHome,
       tax: totalTax,
       pensionContribution: pension,
-      marginalRelief: Math.round(marginalRelief * 100),
       taxSalaryPercentage: Math.round(taxSalaryPercentage * 10) / 10,
-
     });
   }
 
@@ -158,7 +173,7 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
   if (grossSalary <= maxContribution && grossSalary % step !== 0) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, grossSalary);
     const marginalRelief = calculateMarginalRelief(grossSalary, grossSalary);
-    
+
     const taxSalaryPercentage = (totalTax / grossSalary) * 100;
 
     const newPoint = {
@@ -168,10 +183,9 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
       pensionContribution: grossSalary,
       marginalRelief: Math.round(marginalRelief * 100),
       taxSalaryPercentage: Math.round(taxSalaryPercentage * 10) / 10,
-
     };
-    
-    const insertIndex = data.findIndex(point => point.pension > grossSalary);
+
+    const insertIndex = data.findIndex((point) => point.pension > grossSalary);
     if (insertIndex === -1) {
       data.push(newPoint);
     } else {
@@ -181,10 +195,16 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
 
   // Add the current pension contribution point if it's not already included
   if (pensionContribution > 0 && pensionContribution <= maxContribution) {
-    if (!data.some(point => point.pension === pensionContribution)) {
-      const { netTakeHome, totalTax } = calculateTax(grossSalary, pensionContribution);
-      const marginalRelief = calculateMarginalRelief(grossSalary, pensionContribution);
-      
+    if (!data.some((point) => point.pension === pensionContribution)) {
+      const { netTakeHome, totalTax } = calculateTax(
+        grossSalary,
+        pensionContribution
+      );
+      const marginalRelief = calculateMarginalRelief(
+        grossSalary,
+        pensionContribution
+      );
+
       const taxSalaryPercentage = (totalTax / grossSalary) * 100;
 
       const newPoint = {
@@ -194,10 +214,11 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
         pensionContribution,
         marginalRelief: Math.round(marginalRelief * 100),
         taxSalaryPercentage: Math.round(taxSalaryPercentage * 10) / 10,
-
       };
-      
-      const insertIndex = data.findIndex(point => point.pension > pensionContribution);
+
+      const insertIndex = data.findIndex(
+        (point) => point.pension > pensionContribution
+      );
       if (insertIndex === -1) {
         data.push(newPoint);
       } else {
@@ -209,14 +230,18 @@ export function generateChartData(grossSalary: number, pensionContribution: numb
   return data;
 }
 
-export function generateWithdrawalChartData(potValue: number, currentWithdrawal: number) {
+export function generateWithdrawalChartData(
+  potValue: number,
+  currentWithdrawal: number
+) {
   const data = [];
   const step = 1000;
   const maxWithdrawal = Math.min(potValue, 150000); // Reasonable max for visualization
 
   // Generate points from 0 to maxWithdrawal
   for (let withdrawal = 0; withdrawal <= maxWithdrawal; withdrawal += step) {
-    const { taxFreeAmount, totalTax, netWithdrawal } = calculatePensionWithdrawal(potValue, withdrawal);
+    const { taxFreeAmount, totalTax, netWithdrawal } =
+      calculatePensionWithdrawal(potValue, withdrawal);
     data.push({
       withdrawal,
       taxFree: taxFreeAmount,
@@ -226,17 +251,24 @@ export function generateWithdrawalChartData(potValue: number, currentWithdrawal:
   }
 
   // Add current withdrawal point if not already included
-  if (currentWithdrawal > 0 && currentWithdrawal <= maxWithdrawal && currentWithdrawal % step !== 0) {
-    const { taxFreeAmount, totalTax, netWithdrawal } = calculatePensionWithdrawal(potValue, currentWithdrawal);
+  if (
+    currentWithdrawal > 0 &&
+    currentWithdrawal <= maxWithdrawal &&
+    currentWithdrawal % step !== 0
+  ) {
+    const { taxFreeAmount, totalTax, netWithdrawal } =
+      calculatePensionWithdrawal(potValue, currentWithdrawal);
     const newPoint = {
       withdrawal: currentWithdrawal,
       taxFree: taxFreeAmount,
       tax: totalTax,
       taxable: netWithdrawal - taxFreeAmount,
     };
-    
+
     // Find the correct position to insert the point
-    const insertIndex = data.findIndex(point => point.withdrawal > currentWithdrawal);
+    const insertIndex = data.findIndex(
+      (point) => point.withdrawal > currentWithdrawal
+    );
     if (insertIndex === -1) {
       data.push(newPoint);
     } else {
@@ -247,3 +279,15 @@ export function generateWithdrawalChartData(potValue: number, currentWithdrawal:
   return data;
 }
 
+export function calculateMarginalCombinedRelief(
+  marginalSalaryRelief: number,
+  withdrawalTaxPercentage: number
+) {
+  // Consider a 42% relief on salary, and a 15% tax on withdrawal.
+  // For a £1 increase in salary, you get 0.42 relief.
+  // For a £1 increase in withdrawal, you get 0.15 tax.
+  // So for a £1 increase in pension contributions, you get 0.42 relief in salary tax.
+  // When withdrawing, you get 0.42 relief in salary tax, but you also get 0.15 tax on the withdrawal.
+  // So the net relief is 0.42 * (1 - 0.15) = 0.357.
+  return marginalSalaryRelief * (1 - withdrawalTaxPercentage / 100);
+}

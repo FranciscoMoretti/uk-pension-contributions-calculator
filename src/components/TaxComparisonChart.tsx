@@ -28,6 +28,10 @@ const chartConfig = {
     label: "Combined Tax",
     color: "hsl(var(--foreground))",
   },
+  marginalCombinedRelief: {
+    label: "Marginal Combined Relief",
+    color: "hsl(var(--chart-4))",
+  },
 } satisfies ChartConfig;
 
 export function TaxComparisonChart({
@@ -47,13 +51,14 @@ export function TaxComparisonChart({
       xAxisKey="pension"
       lines={[
         "marginalRelief",
+        "marginalCombinedRelief",
         "taxSalaryPercentage",
         "taxPensionPercentage",
-        "combinedTaxPercentage"
+        "combinedTaxPercentage",
       ]}
       showPercentages={true}
       tooltipLabel="Tax Rate Comparison"
       hideRightAxis={true}
     />
   );
-} 
+}

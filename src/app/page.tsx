@@ -1,17 +1,28 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { calculatePensionWithdrawal, generateChartData as generateValuesPerContributionData, generateWithdrawalChartData } from "@/utils/taxCalculations"
-import { SalaryBreakdownChart } from "@/components/SalaryBreakdownChart"
-import { TaxComparisonChart } from "@/components/TaxComparisonChart"
-import { TaxBreakdown } from "@/components/TaxBreakdown"
-import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown"
-import { WithdrawalChart } from "@/components/WithdrawalChart"
-import { Slider } from "@/components/ui/slider"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  calculateMarginalCombinedRelief,
+  calculatePensionWithdrawal,
+  generateChartData as generateValuesPerContributionData,
+  generateWithdrawalChartData,
+} from "@/utils/taxCalculations";
+import { SalaryBreakdownChart } from "@/components/SalaryBreakdownChart";
+import { TaxComparisonChart } from "@/components/TaxComparisonChart";
+import { TaxBreakdown } from "@/components/TaxBreakdown";
+import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown";
+import { WithdrawalChart } from "@/components/WithdrawalChart";
+import { Slider } from "@/components/ui/slider";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -20,20 +31,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
   pensionContribution: z.number().min(0).max(60000),
   potValue: z.number().min(0),
   annualWithdrawal: z.number().min(0),
-})
+});
 
 const handleNumberInput = (value: string) => {
   // Remove any non-digit characters except decimal point
-  const sanitized = value.replace(/[^\d]/g, '')
-  return sanitized === '' ? 0 : Number(sanitized)
-}
+  const sanitized = value.replace(/[^\d]/g, "");
+  return sanitized === "" ? 0 : Number(sanitized);
+};
 
 export default function PensionCalculator() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,42 +55,67 @@ export default function PensionCalculator() {
       potValue: 500000,
       annualWithdrawal: 25000,
     },
-  })
+  });
 
-  const { grossSalary, pensionContribution, potValue, annualWithdrawal: annualPensionWithdrawal } = form.watch()
-  
-  const withdrawalChartData = generateWithdrawalChartData(potValue, annualPensionWithdrawal)
-  const { withdrawalTaxPercentage} = calculatePensionWithdrawal(potValue, annualPensionWithdrawal);
+  const {
+    grossSalary,
+    pensionContribution,
+    potValue,
+    annualWithdrawal: annualPensionWithdrawal,
+  } = form.watch();
 
-  const valuesByContrutributionData = generateValuesPerContributionData(grossSalary, pensionContribution).map(item => ({
+  const withdrawalChartData = generateWithdrawalChartData(
+    potValue,
+    annualPensionWithdrawal
+  );
+  const { withdrawalTaxPercentage } = calculatePensionWithdrawal(
+    potValue,
+    annualPensionWithdrawal
+  );
+
+  const valuesByContrutributionData = generateValuesPerContributionData(
+    grossSalary,
+    pensionContribution
+  ).map((item) => ({
     ...item,
-    taxPensionPercentage: Math.round((withdrawalTaxPercentage) * 10) / 10,
-    combinedTaxPercentage: Math.round((withdrawalTaxPercentage + item.taxSalaryPercentage) * 10) / 10,
+    taxPensionPercentage: Math.round(withdrawalTaxPercentage * 10) / 10,
+    combinedTaxPercentage:
+      Math.round((withdrawalTaxPercentage + item.taxSalaryPercentage) * 10) /
+      10,
     pensionAfterWithdrawal: item.pension * (1 - withdrawalTaxPercentage),
+    marginalCombinedRelief: calculateMarginalCombinedRelief(
+      item.marginalRelief,
+      withdrawalTaxPercentage
+    ), // total relief of boost by tax relief reduced by tax on withdrawal
     pensionWithdrawalTax: item.pension * withdrawalTaxPercentage,
-    net: item.takeHome + item.pension * (1 - withdrawalTaxPercentage/100), // take home (salary after tax) + pension after withdrawal tax
-  }))
+    net: item.takeHome + item.pension * (1 - withdrawalTaxPercentage / 100), // take home (salary after tax) + pension after withdrawal tax
+  }));
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // This is just for form validation, we're using the values directly via watch()
-    console.log(values)
+    console.log(values);
   }
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">UK Pension Calculator</h1>
-      
+
       {/* All Inputs Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Salary & Contribution Inputs */}
         <Card>
           <CardHeader>
             <CardTitle>Salary & Contribution</CardTitle>
-            <CardDescription>Enter your salary and pension contribution</CardDescription>
+            <CardDescription>
+              Enter your salary and pension contribution
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <FormField
                   control={form.control}
                   name="grossSalary"
@@ -94,8 +130,10 @@ export default function PensionCalculator() {
                             inputMode="numeric"
                             pattern="[0-9]*"
                             {...field}
-                            value={field.value === 0 ? '' : field.value}
-                            onChange={e => field.onChange(handleNumberInput(e.target.value))}
+                            value={field.value === 0 ? "" : field.value}
+                            onChange={(e) =>
+                              field.onChange(handleNumberInput(e.target.value))
+                            }
                             className="w-[200px]"
                           />
                         </div>
@@ -127,8 +165,12 @@ export default function PensionCalculator() {
                               inputMode="numeric"
                               pattern="[0-9]*"
                               {...field}
-                              value={field.value === 0 ? '' : field.value}
-                              onChange={e => field.onChange(handleNumberInput(e.target.value))}
+                              value={field.value === 0 ? "" : field.value}
+                              onChange={(e) =>
+                                field.onChange(
+                                  handleNumberInput(e.target.value)
+                                )
+                              }
                               className="w-[200px]"
                             />
                           </div>
@@ -150,11 +192,16 @@ export default function PensionCalculator() {
         <Card>
           <CardHeader>
             <CardTitle>Pension Withdrawal</CardTitle>
-            <CardDescription>Enter your pension pot value and desired annual withdrawal</CardDescription>
+            <CardDescription>
+              Enter your pension pot value and desired annual withdrawal
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <FormField
                   control={form.control}
                   name="potValue"
@@ -169,8 +216,10 @@ export default function PensionCalculator() {
                             inputMode="numeric"
                             pattern="[0-9]*"
                             {...field}
-                            value={field.value === 0 ? '' : field.value}
-                            onChange={e => field.onChange(handleNumberInput(e.target.value))}
+                            value={field.value === 0 ? "" : field.value}
+                            onChange={(e) =>
+                              field.onChange(handleNumberInput(e.target.value))
+                            }
                             className="w-[200px]"
                           />
                         </div>
@@ -197,8 +246,10 @@ export default function PensionCalculator() {
                             inputMode="numeric"
                             pattern="[0-9]*"
                             {...field}
-                            value={field.value === 0 ? '' : field.value}
-                            onChange={e => field.onChange(handleNumberInput(e.target.value))}
+                            value={field.value === 0 ? "" : field.value}
+                            onChange={(e) =>
+                              field.onChange(handleNumberInput(e.target.value))
+                            }
                             className="w-[200px]"
                           />
                         </div>
@@ -221,9 +272,9 @@ export default function PensionCalculator() {
             <CardDescription>Breakdown of your finances</CardDescription>
           </CardHeader>
           <CardContent>
-            <TaxBreakdown 
-              grossSalary={grossSalary} 
-              pensionContribution={pensionContribution} 
+            <TaxBreakdown
+              grossSalary={grossSalary}
+              pensionContribution={pensionContribution}
             />
           </CardContent>
         </Card>
@@ -231,10 +282,12 @@ export default function PensionCalculator() {
         <Card>
           <CardHeader>
             <CardTitle>Withdrawal Tax Breakdown</CardTitle>
-            <CardDescription>Analysis of taxes on pension withdrawals</CardDescription>
+            <CardDescription>
+              Analysis of taxes on pension withdrawals
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <WithdrawalBreakdown 
+            <WithdrawalBreakdown
               potValue={potValue}
               annualWithdrawal={annualPensionWithdrawal}
             />
@@ -244,12 +297,20 @@ export default function PensionCalculator() {
 
       {/* Charts Section */}
       <div className="grid gap-8 mb-8">
-        <SalaryBreakdownChart data={valuesByContrutributionData} currentPension={pensionContribution} />
-        <TaxComparisonChart data={valuesByContrutributionData} currentPension={pensionContribution} />
+        <SalaryBreakdownChart
+          data={valuesByContrutributionData}
+          currentPension={pensionContribution}
+        />
+        <TaxComparisonChart
+          data={valuesByContrutributionData}
+          currentPension={pensionContribution}
+        />
       </div>
 
-      <WithdrawalChart data={withdrawalChartData} currentWithdrawal={annualPensionWithdrawal} />
+      <WithdrawalChart
+        data={withdrawalChartData}
+        currentWithdrawal={annualPensionWithdrawal}
+      />
     </div>
   );
 }
-

@@ -42,9 +42,16 @@ const formSchema = z.object({
 });
 
 const handleNumberInput = (value: string) => {
+  // Allow empty string for backspace/delete operations
+  if (value === "") return 0;
+
   // Remove any non-digit characters except decimal point
-  const sanitized = value.replace(/[^\d]/g, "");
-  return sanitized === "" ? 0 : Number(sanitized);
+  const sanitized = value.replace(/[^\d.]/g, "");
+  // Ensure only one decimal point
+  const parts = sanitized.split(".");
+  const cleaned = parts[0] + (parts.length > 1 ? "." + parts[1] : "");
+
+  return Number(cleaned) || 0;
 };
 
 export default function PensionCalculator() {
@@ -151,8 +158,6 @@ export default function PensionCalculator() {
                           <span className="text-sm font-medium">£</span>
                           <Input
                             type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
                             {...field}
                             value={field.value === 0 ? "" : field.value}
                             onChange={(e) =>
@@ -186,8 +191,6 @@ export default function PensionCalculator() {
                             <span className="text-sm font-medium">£</span>
                             <Input
                               type="text"
-                              inputMode="numeric"
-                              pattern="[0-9]*"
                               {...field}
                               value={field.value === 0 ? "" : field.value}
                               onChange={(e) =>
@@ -237,8 +240,6 @@ export default function PensionCalculator() {
                           <span className="text-sm font-medium">£</span>
                           <Input
                             type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
                             {...field}
                             value={field.value === 0 ? "" : field.value}
                             onChange={(e) =>
@@ -267,8 +268,6 @@ export default function PensionCalculator() {
                           <span className="text-sm font-medium">£</span>
                           <Input
                             type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
                             {...field}
                             value={field.value === 0 ? "" : field.value}
                             onChange={(e) =>

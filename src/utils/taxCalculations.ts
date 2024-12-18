@@ -115,7 +115,7 @@ export function calculatePensionWithdrawal(
   );
   const totalTax = incomeTax; // No NI on pension withdrawals
   const netWithdrawal = annualWithdrawal - totalTax;
-  const withdrawalTaxPercentage = (totalTax / annualWithdrawal) * 100;
+  const withdrawalTaxRate = totalTax / annualWithdrawal;
 
   return {
     taxFreePortion,
@@ -125,7 +125,7 @@ export function calculatePensionWithdrawal(
     incomeTax,
     totalTax,
     netWithdrawal,
-    withdrawalTaxPercentage,
+    withdrawalTaxRate,
   };
 }
 
@@ -158,31 +158,35 @@ export function generateChartData(
   for (let pension = 0; pension <= maxContribution; pension += step) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, pension);
     // Calculate salary tax percentage
-    const taxSalaryPercentage = (totalTax / grossSalary) * 100;
+    const taxSalaryRate = totalTax / grossSalary;
+    const marginalReliefRate = calculateMarginalRelief(grossSalary, pension);
 
     data.push({
       pension,
       takeHome: netTakeHome,
       tax: totalTax,
+      marginalReliefRate: marginalReliefRate,
       pensionContribution: pension,
-      taxSalaryPercentage: Math.round(taxSalaryPercentage * 10) / 10,
+      taxSalaryRate: taxSalaryRate,
     });
   }
 
   // Add gross salary point if it's not already included and is less than maxContribution
   if (grossSalary <= maxContribution && grossSalary % step !== 0) {
     const { netTakeHome, totalTax } = calculateTax(grossSalary, grossSalary);
-    const marginalRelief = calculateMarginalRelief(grossSalary, grossSalary);
-
-    const taxSalaryPercentage = (totalTax / grossSalary) * 100;
+    const marginalReliefRate = calculateMarginalRelief(
+      grossSalary,
+      grossSalary
+    );
+    const taxSalaryRate = totalTax / grossSalary;
 
     const newPoint = {
       pension: grossSalary,
       takeHome: netTakeHome,
       tax: totalTax,
       pensionContribution: grossSalary,
-      marginalRelief: Math.round(marginalRelief * 100),
-      taxSalaryPercentage: Math.round(taxSalaryPercentage * 10) / 10,
+      marginalReliefRate: marginalReliefRate,
+      taxSalaryRate: taxSalaryRate,
     };
 
     const insertIndex = data.findIndex((point) => point.pension > grossSalary);
@@ -200,20 +204,20 @@ export function generateChartData(
         grossSalary,
         pensionContribution
       );
-      const marginalRelief = calculateMarginalRelief(
+      const marginalReliefRate = calculateMarginalRelief(
         grossSalary,
         pensionContribution
       );
 
-      const taxSalaryPercentage = (totalTax / grossSalary) * 100;
+      const taxSalaryRate = totalTax / grossSalary;
 
       const newPoint = {
         pension: pensionContribution,
         takeHome: netTakeHome,
         tax: totalTax,
         pensionContribution,
-        marginalRelief: Math.round(marginalRelief * 100),
-        taxSalaryPercentage: Math.round(taxSalaryPercentage * 10) / 10,
+        marginalReliefRate: marginalReliefRate,
+        taxSalaryRate: taxSalaryRate,
       };
 
       const insertIndex = data.findIndex(
@@ -281,7 +285,7 @@ export function generateWithdrawalChartData(
 
 export function calculateMarginalCombinedRelief(
   marginalSalaryRelief: number,
-  withdrawalTaxPercentage: number
+  withdrawalTaxRate: number
 ) {
   // Consider a 42% relief on salary, and a 15% tax on withdrawal.
   // For a £1 increase in salary, you get 0.42 relief.
@@ -289,5 +293,5 @@ export function calculateMarginalCombinedRelief(
   // So for a £1 increase in pension contributions, you get 0.42 relief in salary tax.
   // When withdrawing, you get 0.42 relief in salary tax, but you also get 0.15 tax on the withdrawal.
   // So the net relief is 0.42 * (1 - 0.15) = 0.357.
-  return marginalSalaryRelief * (1 - withdrawalTaxPercentage / 100);
+  return marginalSalaryRelief * (1 - withdrawalTaxRate);
 }

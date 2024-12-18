@@ -5,14 +5,14 @@ import { ChartConfig } from "@/components/ui/chart";
 
 interface ChartData {
   pension: number;
-  marginalRelief: number;
+  marginalReliefPercentage: number;
   taxSalaryPercentage: number;
   taxPensionPercentage: number;
   combinedTaxPercentage: number;
 }
 
 const chartConfig = {
-  marginalRelief: {
+  marginalReliefPercentage: {
     label: "Marginal Tax Relief",
     color: "hsl(var(--chart-4))",
   },
@@ -28,9 +28,9 @@ const chartConfig = {
     label: "Combined Tax",
     color: "hsl(var(--foreground))",
   },
-  marginalCombinedRelief: {
+  marginalCombinedReliefPercentage: {
     label: "Marginal Combined Relief",
-    color: "hsl(var(--chart-4))",
+    color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
@@ -50,8 +50,8 @@ export function TaxComparisonChart({
       currentValue={currentPension}
       xAxisKey="pension"
       lines={[
-        "marginalRelief",
-        "marginalCombinedRelief",
+        "marginalReliefPercentage",
+        "marginalCombinedReliefPercentage",
         "taxSalaryPercentage",
         "taxPensionPercentage",
         "combinedTaxPercentage",

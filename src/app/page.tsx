@@ -32,6 +32,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { MarginalROIChart } from "@/components/MarginalROIChart";
 
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
@@ -68,7 +69,7 @@ export default function PensionCalculator() {
     potValue,
     annualPensionWithdrawal
   );
-  const { withdrawalTaxPercentage } = calculatePensionWithdrawal(
+  const { withdrawalTaxRate } = calculatePensionWithdrawal(
     potValue,
     annualPensionWithdrawal
   );
@@ -78,17 +79,40 @@ export default function PensionCalculator() {
     pensionContribution
   ).map((item) => ({
     ...item,
-    taxPensionPercentage: Math.round(withdrawalTaxPercentage * 10) / 10,
-    combinedTaxPercentage:
-      Math.round((withdrawalTaxPercentage + item.taxSalaryPercentage) * 10) /
-      10,
-    pensionAfterWithdrawal: item.pension * (1 - withdrawalTaxPercentage),
-    marginalCombinedRelief: calculateMarginalCombinedRelief(
-      item.marginalRelief,
-      withdrawalTaxPercentage
-    ), // total relief of boost by tax relief reduced by tax on withdrawal
-    pensionWithdrawalTax: item.pension * withdrawalTaxPercentage,
-    net: item.takeHome + item.pension * (1 - withdrawalTaxPercentage / 100), // take home (salary after tax) + pension after withdrawal tax
+    taxSalaryPercentage: Number((item.taxSalaryRate * 100).toFixed(1)),
+    taxPensionPercentage: Number((withdrawalTaxRate * 100).toFixed(1)),
+    combinedTaxPercentage: Number(
+      ((withdrawalTaxRate + item.taxSalaryRate) * 100).toFixed(1)
+    ),
+    pensionAfterWithdrawal: item.pension * (1 - withdrawalTaxRate),
+    marginalReliefPercentage: Number(
+      (item.marginalReliefRate * 100).toFixed(1)
+    ),
+    marginalCombinedReliefRate: calculateMarginalCombinedRelief(
+      item.marginalReliefRate,
+      withdrawalTaxRate
+    ),
+    marginalCombinedReliefPercentage: Number(
+      (
+        calculateMarginalCombinedRelief(
+          item.marginalReliefRate,
+          withdrawalTaxRate
+        ) * 100
+      ).toFixed(1)
+    ),
+    pensionWithdrawalTax: item.pension * withdrawalTaxRate,
+    net: item.takeHome + item.pension * (1 - withdrawalTaxRate),
+    baselineReturn: 100,
+    pensionBoost:
+      Math.round(
+        (1 /
+          (1 -
+            calculateMarginalCombinedRelief(
+              item.marginalReliefRate,
+              withdrawalTaxRate
+            ))) *
+          1000
+      ) / 10,
   }));
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -298,6 +322,10 @@ export default function PensionCalculator() {
       {/* Charts Section */}
       <div className="grid gap-8 mb-8">
         <SalaryBreakdownChart
+          data={valuesByContrutributionData}
+          currentPension={pensionContribution}
+        />
+        <MarginalROIChart
           data={valuesByContrutributionData}
           currentPension={pensionContribution}
         />

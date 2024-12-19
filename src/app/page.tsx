@@ -181,7 +181,7 @@ export default function PensionCalculator() {
                     name="potValue"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Pension Pot Value</FormLabel>
+                        <FormLabel>Pension Pot Value at Retirement</FormLabel>
                         <FormControl>
                           <div className="flex items-center space-x-2">
                             <span className="text-sm font-medium">£</span>

@@ -93,12 +93,8 @@ export default function PensionCalculator() {
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-medium">£</span>
                           <Input
-                            type="text"
+                            type="number"
                             {...field}
-                            value={field.value === 0 ? "" : field.value}
-                            // onChange={(e) =>
-                            //   field.onChange(handleNumberInput(e.target.value))
-                            // }
                             className="w-[200px]"
                           />
                         </div>
@@ -126,14 +122,8 @@ export default function PensionCalculator() {
                           <div className="flex items-center space-x-2 min-w-[100px]">
                             <span className="text-sm font-medium">£</span>
                             <Input
-                              type="text"
+                              type="number"
                               {...field}
-                              value={field.value === 0 ? "" : field.value}
-                              onChange={(e) =>
-                                field.onChange(
-                                  handleNumberInput(e.target.value)
-                                )
-                              }
                               className="w-[200px]"
                             />
                           </div>
@@ -175,12 +165,8 @@ export default function PensionCalculator() {
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-medium">£</span>
                           <Input
-                            type="text"
+                            type="number"
                             {...field}
-                            value={field.value === 0 ? "" : field.value}
-                            onChange={(e) =>
-                              field.onChange(handleNumberInput(e.target.value))
-                            }
                             className="w-[200px]"
                           />
                         </div>
@@ -203,12 +189,8 @@ export default function PensionCalculator() {
                         <div className="flex items-center space-x-2">
                           <span className="text-sm font-medium">£</span>
                           <Input
-                            type="text"
+                            type="number"
                             {...field}
-                            value={field.value === 0 ? "" : field.value}
-                            onChange={(e) =>
-                              field.onChange(handleNumberInput(e.target.value))
-                            }
                             className="w-[200px]"
                           />
                         </div>

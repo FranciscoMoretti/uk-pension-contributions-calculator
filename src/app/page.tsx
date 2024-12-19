@@ -52,7 +52,13 @@ export default function PensionCalculator() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">UK Pension Calculator</h1>
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">UK Pension Calculator</h1>
+        <p className="text-lg text-muted-foreground">
+          Optimize your pension contributions and visualize the impact on your
+          take-home pay and tax savings
+        </p>
+      </header>
 
       {/* All Inputs Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

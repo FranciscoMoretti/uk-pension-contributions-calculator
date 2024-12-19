@@ -24,9 +24,13 @@ const chartConfig = {
 export function MarginalROIChart({
   data,
   currentPension,
+  title = "Return on Investment by Pension Contribution",
+  xAxisLabel = "Pension Contribution",
 }: {
   data: ChartData[];
   currentPension: number;
+  title?: string;
+  xAxisLabel?: string;
 }) {
   const processedData = data.map((d) => ({
     ...d,
@@ -39,7 +43,8 @@ export function MarginalROIChart({
     <BaseChart
       data={processedData}
       config={chartConfig}
-      title="Return on Investment"
+      title={title}
+      xAxisLabel={xAxisLabel}
       description="For every £1 you put in your pension vs. taking it as salary. The purple line shows how much more money you get by using your pension vs. taking it as salary (due to tax savings)."
       currentValue={currentPension}
       xAxisKey="pension"

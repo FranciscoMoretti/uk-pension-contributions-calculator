@@ -37,15 +37,20 @@ const chartConfig = {
 export function TaxComparisonChart({
   data,
   currentPension,
+  title = "Tax Rates & Savings by Pension Contribution",
+  xAxisLabel = "Pension Contribution",
 }: {
   data: ChartData[];
   currentPension: number;
+  title?: string;
+  xAxisLabel?: string;
 }) {
   return (
     <BaseChart
       data={data}
       config={chartConfig}
-      title="Tax Rates & Savings"
+      title={title}
+      xAxisLabel={xAxisLabel}
       description="Shows your current tax rates and potential savings. The black line shows your total tax rate (salary + future pension). The blue line shows your net tax savings after considering both current and future taxes."
       currentValue={currentPension}
       xAxisKey="pension"

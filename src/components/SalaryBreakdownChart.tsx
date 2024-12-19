@@ -33,15 +33,20 @@ const chartConfig = {
 export function SalaryBreakdownChart({
   data,
   currentPension,
+  title = "Salary & Pension Allocation by Pension Contribution",
+  xAxisLabel = "Pension Contribution",
 }: {
   data: ChartData[];
   currentPension: number;
+  title?: string;
+  xAxisLabel?: string;
 }) {
   return (
     <BaseChart
       data={data}
       config={chartConfig}
-      title="Salary & Pension Allocation"
+      title={title}
+      xAxisLabel={xAxisLabel}
       description="Shows how your total compensation (salary + pension) is split between take-home pay, pension savings, and taxes. The black line shows your total money after all taxes (including future pension withdrawal tax)."
       currentValue={currentPension}
       xAxisKey="pension"

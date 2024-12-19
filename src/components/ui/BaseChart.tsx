@@ -35,7 +35,7 @@ interface BaseChartProps {
   currentLabel?: string;
   xAxisKey: string;
   xAxisFormatter?: (value: number) => string;
-  leftAxisFormatter?: (value: number) => string;
+  xAxisLabel?: string;
   rightAxisFormatter?: (value: number) => string;
   areas?: string[];
   lines?: string[];
@@ -53,6 +53,7 @@ export function BaseChart({
   currentValue,
   currentLabel = "Current",
   xAxisKey,
+  xAxisLabel,
   xAxisFormatter = (value) => `£${value.toLocaleString()}`,
   rightAxisFormatter = (value) => `${value}%`,
   areas = [],
@@ -89,6 +90,7 @@ export function BaseChart({
               axisLine={false}
               tickMargin={8}
               tickFormatter={xAxisFormatter}
+              label={xAxisLabel}
             />
             <YAxis
               yAxisId="left"

@@ -54,10 +54,18 @@ export default function PensionCalculator() {
     <div className="container mx-auto p-4">
       <header className="mb-8">
         <h1 className="text-3xl font-bold mb-2">UK Pension Calculator</h1>
-        <p className="text-lg text-muted-foreground">
-          Optimize your pension contributions and visualize the impact on your
-          take-home pay and tax savings
+        <p className="text-lg text-muted-foreground mb-4">
+          Calculate how much you save through salary sacrifice pension
+          contributions - one of the most tax-efficient ways to save for
+          retirement
         </p>
+        <div className="text-sm text-muted-foreground space-y-2">
+          <p>
+            <strong>Salary Sacrifice:</strong> This calculator assumes
+            you&apos;re using salary sacrifice, where pension contributions are
+            taken before tax and National Insurance, maximizing tax efficiency.
+          </p>
+        </div>
       </header>
 
       {/* All Inputs Section */}
@@ -67,7 +75,8 @@ export default function PensionCalculator() {
           <CardHeader>
             <CardTitle>Salary & Contribution</CardTitle>
             <CardDescription>
-              Enter your salary and pension contribution
+              Enter your gross salary and how much you want to contribute via
+              salary sacrifice
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -102,7 +111,7 @@ export default function PensionCalculator() {
                   name="pensionContribution"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Yearly Pension Contribution</FormLabel>
+                      <FormLabel>Your Yearly Pension Contribution</FormLabel>
                       <FormControl>
                         <div className="space-y-4 flex gap-4 items-center flex-wrap">
                           <Slider
@@ -123,7 +132,10 @@ export default function PensionCalculator() {
                         </div>
                       </FormControl>
                       <FormDescription>
-                        Maximum contribution: £60,000 or 100% of salary
+                        Your salary sacrifice contribution. Note: The annual
+                        allowance of £60,000 includes both your and your
+                        employer&apos;s contributions. Your contribution cannot
+                        exceed your gross salary.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -204,6 +216,14 @@ export default function PensionCalculator() {
         potValue={potValue}
         annualPensionWithdrawal={annualWithdrawal}
       />
+
+      <footer className="mt-12 border-t pt-6 text-sm text-muted-foreground">
+        <p>
+          This calculator is for illustrative purposes only. Tax rates and
+          allowances may change. Always consult a financial advisor for
+          personalized advice.
+        </p>
+      </footer>
     </div>
   );
 }

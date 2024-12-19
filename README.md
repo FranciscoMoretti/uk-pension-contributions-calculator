@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UK Pension Calculator
 
-## Getting Started
+An interactive calculator to help you understand and optimize your pension contributions through salary sacrifice - one of the most tax-efficient ways to save for retirement in the UK.
 
-First, run the development server:
+## Features
+
+- **Salary Sacrifice Analysis**: See how pension contributions affect your take-home pay and tax savings
+- **Real-time Calculations**: Interactive sliders and inputs with immediate feedback
+- **Tax Breakdown**: Detailed breakdown of Income Tax and National Insurance savings
+- **Pension Withdrawal Modeling**: Understand how your future pension withdrawals will be taxed
+- **Visual Charts**: Clear visualizations of:
+  - Salary & pension allocation
+  - Tax savings through salary sacrifice
+  - Return on investment comparison
+  - Withdrawal tax scenarios
+
+## Why Use This Calculator?
+
+Salary sacrifice pension contributions are highly tax-efficient because:
+
+1. Contributions are taken before tax and National Insurance
+2. You save both Income Tax AND National Insurance (unlike regular pension contributions)
+3. The first 25% of pension withdrawals is tax-free
+4. The rest is taxed as income, often at a lower rate than when you were working
+
+## Development
+
+This is a Next.js 15 project using:
+
+- TypeScript
+- Tailwind CSS
+- Recharts for visualizations
+- React Hook Form for form handling
+- Zod for validation
+
+### Getting Started
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Run production server
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## License
 
-## Learn More
+MIT License - feel free to use this calculator for any purpose.
 
-To learn more about Next.js, take a look at the following resources:
+## Disclaimer
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This calculator is for illustrative purposes only. Tax rates and allowances may change. Always consult a financial advisor for personalized advice.

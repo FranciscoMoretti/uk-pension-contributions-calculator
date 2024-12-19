@@ -4,15 +4,15 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "UK Pension Calculator | Optimize Your Pension Contributions",
+  title: "UK Pension Calculator | Salary Sacrifice Tax Savings Calculator",
   description:
-    "Calculate the optimal pension contribution through salary sacrifice. See tax savings, withdrawal scenarios, and maximize your retirement savings with our interactive calculator.",
+    "Calculate your tax savings through salary sacrifice pension contributions. See how much you save in Income Tax and National Insurance, plus understand future withdrawal scenarios.",
   keywords:
-    "UK pension, salary sacrifice, pension calculator, tax savings, retirement planning",
+    "UK pension, salary sacrifice, pension calculator, tax savings, retirement planning, National Insurance savings, income tax relief",
   openGraph: {
-    title: "UK Pension Calculator | Optimize Your Pension Contributions",
+    title: "UK Pension Calculator | Salary Sacrifice Tax Savings Calculator",
     description:
-      "Calculate the optimal pension contribution through salary sacrifice. See tax savings, withdrawal scenarios, and maximize your retirement savings.",
+      "Calculate your tax savings through salary sacrifice pension contributions. See how much you save in Income Tax and National Insurance, plus understand future withdrawal scenarios.",
     type: "website",
   },
 };

@@ -13,7 +13,7 @@ interface ChartData {
 
 const chartConfig = {
   marginalReliefPercentage: {
-    label: "Immediate Tax Savings",
+    label: "Marginal Immediate Tax Savings",
     color: "hsl(var(--chart-4))",
   },
   taxSalaryPercentage: {
@@ -29,7 +29,7 @@ const chartConfig = {
     color: "hsl(var(--foreground))",
   },
   marginalCombinedReliefPercentage: {
-    label: "Net Tax Savings",
+    label: "Marginal Net Tax Savings",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;

@@ -33,6 +33,9 @@ export function WithdrawalBreakdown({
       {/* Withdrawal Calculation */}
       <div>
         <h3 className="text-sm font-medium mb-2">Withdrawal Calculation</h3>
+        <div className="text-xs text-muted-foreground mb-2">
+          The first 25% of your pension withdrawals are tax-free
+        </div>
         <Table>
           <TableBody>
             <TableRow>
@@ -61,7 +64,11 @@ export function WithdrawalBreakdown({
 
       {/* Tax Breakdown */}
       <div>
-        <h3 className="text-sm font-medium mb-2">Tax Breakdown</h3>
+        <h3 className="text-sm font-medium mb-2">Tax on Withdrawals</h3>
+        <div className="text-xs text-muted-foreground mb-2">
+          The taxable portion is treated as income and taxed at your marginal
+          rate
+        </div>
         <Accordion type="multiple">
           <AccordionItem value="income-tax" className="border-0">
             <AccordionTrigger className="hover:no-underline py-2 [&[data-state=open]_svg]:rotate-180 w-full flex justify-between items-center hover:bg-muted/50 px-1.5">
@@ -114,7 +121,11 @@ export function WithdrawalBreakdown({
 
       {/* Final Results */}
       <div>
-        <h3 className="text-sm font-medium mb-2">Final Results</h3>
+        <h3 className="text-sm font-medium mb-2">Net Withdrawal</h3>
+        <div className="text-xs text-muted-foreground mb-2">
+          The amount you&apos;ll receive after tax is deducted from your
+          withdrawal
+        </div>
         <Table>
           <TableBody>
             <TableRow>

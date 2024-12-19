@@ -30,19 +30,6 @@ const formSchema = z.object({
   annualWithdrawal: z.number().min(0),
 });
 
-const handleNumberInput = (value: string) => {
-  // Allow empty string for backspace/delete operations
-  if (value === "") return 0;
-
-  // Remove any non-digit characters except decimal point
-  const sanitized = value.replace(/[^\d.]/g, "");
-  // Ensure only one decimal point
-  const parts = sanitized.split(".");
-  const cleaned = parts[0] + (parts.length > 1 ? "." + parts[1] : "");
-
-  return Number(cleaned) || 0;
-};
-
 export default function PensionCalculator() {
   "use no memo";
   const form = useForm<z.infer<typeof formSchema>>({

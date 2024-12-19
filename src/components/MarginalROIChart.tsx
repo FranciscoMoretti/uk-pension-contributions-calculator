@@ -39,8 +39,8 @@ export function MarginalROIChart({
     <BaseChart
       data={processedData}
       config={chartConfig}
-      title="Pension Investment ROI"
-      description="Comparison of take-home returns with and without going through the pension"
+      title="Return on Investment"
+      description="For every £1 you put in your pension vs. taking it as salary. The purple line shows how much more money you get by using your pension vs. taking it as salary (due to tax savings)."
       currentValue={currentPension}
       xAxisKey="pension"
       lines={["baselineReturn", "pensionBoost"]}

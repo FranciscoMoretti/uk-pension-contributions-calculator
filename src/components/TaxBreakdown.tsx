@@ -32,7 +32,10 @@ export function TaxBreakdown({
     <div className="space-y-6">
       {/* Income Calculation */}
       <div>
-        <h3 className="text-sm font-medium mb-2">Income Calculation</h3>
+        <h3 className="text-sm font-medium mb-2">Current Salary Breakdown</h3>
+        <div className="text-xs text-muted-foreground mb-2">
+          Your salary is first reduced by pension contributions, then taxed
+        </div>
         <Table>
           <TableBody>
             <TableRow>
@@ -59,7 +62,11 @@ export function TaxBreakdown({
 
       {/* Tax Breakdown */}
       <div>
-        <h3 className="text-sm font-medium mb-2">Tax Breakdown</h3>
+        <h3 className="text-sm font-medium mb-2">Current Tax Breakdown</h3>
+        <div className="text-xs text-muted-foreground mb-2">
+          Income Tax and National Insurance are calculated on your salary after
+          pension deductions
+        </div>
         <Accordion type="multiple" className="">
           {/* Income Tax Bands */}
           <AccordionItem value="income-tax" className="border-0">
@@ -155,7 +162,11 @@ export function TaxBreakdown({
 
       {/* Final Results */}
       <div>
-        <h3 className="text-sm font-medium mb-2">Final Results</h3>
+        <h3 className="text-sm font-medium mb-2">Take-Home Pay</h3>
+        <div className="text-xs text-muted-foreground mb-2">
+          Your final take-home pay after all deductions, and total compensation
+          including pension
+        </div>
         <Table>
           <TableBody>
             <TableRow>

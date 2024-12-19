@@ -16,11 +16,11 @@ const chartConfig = {
     color: "hsl(var(--chart-3))",
   },
   taxable: {
-    label: "Taxable",
+    label: "After-Tax Portion",
     color: "hsl(var(--chart-1))",
   },
   tax: {
-    label: "Tax",
+    label: "Tax Paid",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
@@ -36,8 +36,8 @@ export function WithdrawalChart({
     <BaseChart
       data={data}
       config={chartConfig}
-      title="Withdrawal Breakdown"
-      description="Impact of varying withdrawal amounts on tax and take-home amount"
+      title="Pension Withdrawal Breakdown"
+      description="Shows how much you'll get to keep from your pension withdrawals. Part of it is tax-free due to LSA, and the rest is taxed as income."
       currentValue={currentWithdrawal}
       xAxisKey="withdrawal"
       areas={["taxFree", "taxable", "tax"]}

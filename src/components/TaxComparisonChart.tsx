@@ -13,23 +13,23 @@ interface ChartData {
 
 const chartConfig = {
   marginalReliefPercentage: {
-    label: "Marginal Tax Relief",
+    label: "Immediate Tax Savings",
     color: "hsl(var(--chart-4))",
   },
   taxSalaryPercentage: {
-    label: "Salary Tax",
+    label: "Current Salary Tax Rate",
     color: "hsl(var(--chart-5))",
   },
   taxPensionPercentage: {
-    label: "Pension Withdrawal Tax ",
+    label: "Future Pension Tax Rate",
     color: "hsl(var(--chart-6))",
   },
   combinedTaxPercentage: {
-    label: "Combined Tax",
+    label: "Total Tax Rate",
     color: "hsl(var(--foreground))",
   },
   marginalCombinedReliefPercentage: {
-    label: "Marginal Combined Relief",
+    label: "Net Tax Savings",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
@@ -45,8 +45,8 @@ export function TaxComparisonChart({
     <BaseChart
       data={data}
       config={chartConfig}
-      title="Tax Rate Comparison"
-      description="Comparison of different tax rates based on pension contribution"
+      title="Tax Rates & Savings"
+      description="Shows your current tax rates and potential savings. The black line shows your total tax rate (salary + future pension). The blue line shows your net tax savings after considering both current and future taxes."
       currentValue={currentPension}
       xAxisKey="pension"
       lines={[

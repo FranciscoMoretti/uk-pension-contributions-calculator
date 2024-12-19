@@ -39,6 +39,7 @@ interface BaseChartProps {
   rightAxisFormatter?: (value: number) => string;
   areas?: string[];
   lines?: string[];
+  dottedLines?: string[];
   height?: number;
   showPercentages?: boolean;
   tooltipLabel?: string;
@@ -58,6 +59,7 @@ export function BaseChart({
   rightAxisFormatter = (value) => `${value}%`,
   areas = [],
   lines = [],
+  dottedLines = [],
   height = 400,
   showPercentages = false,
   tooltipLabel,
@@ -152,7 +154,7 @@ export function BaseChart({
                 stroke={`var(--color-${key})`}
                 strokeWidth={key.includes("combined") ? 3 : 2}
                 dot={false}
-                // strokeDasharray={key === 'marginalRelief' ? "4 2" : "3 3"}
+                strokeDasharray={dottedLines?.includes(key) ? "4 2" : undefined}
               />
             ))}
 

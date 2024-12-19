@@ -50,7 +50,7 @@ export function SalaryBreakdownChart({
       description="Shows how your total compensation (salary + pension) is split between take-home pay, pension savings, and taxes. The black line shows your total money after all taxes (including future pension withdrawal tax)."
       currentValue={currentPension}
       xAxisKey="pension"
-      areas={["takeHome", "pensionContribution", "tax"]}
+      areas={["pensionContribution", "takeHome", "tax"]}
       lines={["net"]}
       tooltipLabel="Salary Breakdown"
       hideRightAxis={true}

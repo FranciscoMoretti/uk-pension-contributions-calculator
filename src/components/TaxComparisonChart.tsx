@@ -61,6 +61,11 @@ export function TaxComparisonChart({
         "taxPensionPercentage",
         "combinedTaxPercentage",
       ]}
+      dottedLines={[
+        "marginalReliefPercentage",
+        "taxSalaryPercentage",
+        "taxPensionPercentage",
+      ]}
       showPercentages={true}
       tooltipLabel="Tax Rate Comparison"
       hideRightAxis={true}

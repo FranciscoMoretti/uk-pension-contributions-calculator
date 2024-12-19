@@ -24,7 +24,7 @@ const chartConfig = {
 export function MarginalROIChart({
   data,
   currentPension,
-  title = "Return on Investment by Pension Contribution",
+  title,
   xAxisLabel = "Pension Contribution",
 }: {
   data: ChartData[];
@@ -34,9 +34,9 @@ export function MarginalROIChart({
 }) {
   const processedData = data.map((d) => ({
     ...d,
-    baselineReturn: 100, // Always 100% as baseline
+    baselineReturn: 0, // Always 0% as baseline
     pensionBoost:
-      Math.round((1 / (1 - d.marginalCombinedReliefRate)) * 1000) / 10, // Convert to percentage with 1 decimal
+      Math.round((1 / (1 - d.marginalCombinedReliefRate)) * 1000) / 10 - 100, // Convert to percentage with 1 decimal
   }));
 
   return (

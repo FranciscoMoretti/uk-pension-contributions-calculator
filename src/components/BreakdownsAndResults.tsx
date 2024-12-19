@@ -120,20 +120,20 @@ export function BreakdownsAndResults(props: {
         <SalaryBreakdownChart
           data={valuesByContrutributionData}
           currentPension={pensionContribution}
-          title="Salary & Pension Allocation by Pension Contribution"
+          title="Salary & Pension Allocation by Pension Contributions"
           xAxisLabel="Pension Contribution"
         />
         <MarginalROIChart
           data={valuesByContrutributionData}
           currentPension={pensionContribution}
-          title="Return on Investment by Pension Contribution"
+          title="Marginal Return on Investment by Pension Contributions"
           xAxisLabel="Pension Contribution"
         />
         <TaxComparisonChart
           data={valuesByContrutributionData}
           currentPension={pensionContribution}
-          title="Tax Rates & Savings by Pension Contribution"
-          xAxisLabel="Pension Contribution"
+          title="Tax Rates & Savings by Pension Contributions"
+          xAxisLabel="Pension Contributions"
         />
       </div>
 

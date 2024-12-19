@@ -21,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PensionCalculations } from "@/components/PensionCalculations";
+import { BreakdownsAndResults } from "@/components/BreakdownsAndResults";
 
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
@@ -205,7 +205,7 @@ export default function PensionCalculator() {
         </Card>
       </div>
 
-      <PensionCalculations
+      <BreakdownsAndResults
         grossSalary={grossSalary}
         pensionContribution={pensionContribution}
         potValue={potValue}

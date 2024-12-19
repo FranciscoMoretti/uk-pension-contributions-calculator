@@ -19,7 +19,7 @@ import { WithdrawalChart } from "@/components/WithdrawalChart";
 import { MarginalROIChart } from "@/components/MarginalROIChart";
 import { useDeferredValue } from "react";
 
-export function PensionCalculations(props: {
+export function BreakdownsAndResults(props: {
   grossSalary: number;
   pensionContribution: number;
   potValue: number;

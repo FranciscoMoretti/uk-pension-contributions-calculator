@@ -55,7 +55,7 @@ export function BaseChart({
   currentLabel = "Current",
   xAxisKey,
   xAxisLabel,
-  xAxisFormatter = (value) => `£${value.toLocaleString()}`,
+  xAxisFormatter = (value) => `£${String(value).toLocaleString()}`,
   rightAxisFormatter = (value) => `${value}%`,
   areas = [],
   lines = [],
@@ -126,7 +126,13 @@ export function BaseChart({
                         })}`,
                   }))}
                   className="min-w-[10rem]"
-                  label={tooltipLabel}
+                  label={
+                    tooltipLabel
+                      ? `${tooltipLabel} for ${xAxisFormatter(
+                          payload?.[0]?.payload?.[xAxisKey]
+                        )}`
+                      : xAxisFormatter(payload?.[0]?.payload?.[xAxisKey])
+                  }
                 />
               )}
             />

@@ -8,17 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  calculateMarginalCombinedRelief,
-  calculatePensionWithdrawal,
-  generateChartData as generateValuesPerContributionData,
-  generateWithdrawalChartData,
-} from "@/utils/taxCalculations";
-import { SalaryBreakdownChart } from "@/components/SalaryBreakdownChart";
-import { TaxComparisonChart } from "@/components/TaxComparisonChart";
-import { TaxBreakdown } from "@/components/TaxBreakdown";
-import { WithdrawalBreakdown } from "@/components/WithdrawalBreakdown";
-import { WithdrawalChart } from "@/components/WithdrawalChart";
 import { Slider } from "@/components/ui/slider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,8 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MarginalROIChart } from "@/components/MarginalROIChart";
-import { useDeferredValue } from "react";
+import { PensionCalculations } from "@/components/PensionCalculations";
 
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
@@ -56,6 +44,7 @@ const handleNumberInput = (value: string) => {
 };
 
 export default function PensionCalculator() {
+  "use no memo";
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,69 +55,8 @@ export default function PensionCalculator() {
     },
   });
 
-  const {
-    grossSalary,
-    pensionContribution,
-    potValue,
-    annualWithdrawal: annualPensionWithdrawal,
-  } = form.watch();
-
-  const deferredGrossSalary = useDeferredValue(grossSalary);
-  const deferredPensionContribution = useDeferredValue(pensionContribution);
-  const deferredPotValue = useDeferredValue(potValue);
-  const deferredAnnualPensionWithdrawal = useDeferredValue(
-    annualPensionWithdrawal
-  );
-
-  const withdrawalChartData = generateWithdrawalChartData(
-    deferredPotValue,
-    deferredAnnualPensionWithdrawal
-  );
-  const { withdrawalTaxRate } = calculatePensionWithdrawal(
-    deferredPotValue,
-    deferredAnnualPensionWithdrawal
-  );
-
-  const valuesByContrutributionData = generateValuesPerContributionData(
-    deferredGrossSalary,
-    deferredPensionContribution
-  ).map((item) => ({
-    ...item,
-    taxSalaryPercentage: Number((item.taxSalaryRate * 100).toFixed(1)),
-    taxPensionPercentage: Number((withdrawalTaxRate * 100).toFixed(1)),
-    combinedTaxPercentage: Number(
-      ((withdrawalTaxRate + item.taxSalaryRate) * 100).toFixed(1)
-    ),
-    pensionAfterWithdrawal: item.pension * (1 - withdrawalTaxRate),
-    marginalReliefPercentage: Number(
-      (item.marginalReliefRate * 100).toFixed(1)
-    ),
-    marginalCombinedReliefRate: calculateMarginalCombinedRelief(
-      item.marginalReliefRate,
-      withdrawalTaxRate
-    ),
-    marginalCombinedReliefPercentage: Number(
-      (
-        calculateMarginalCombinedRelief(
-          item.marginalReliefRate,
-          withdrawalTaxRate
-        ) * 100
-      ).toFixed(1)
-    ),
-    pensionWithdrawalTax: item.pension * withdrawalTaxRate,
-    net: item.takeHome + item.pension * (1 - withdrawalTaxRate),
-    baselineReturn: 100,
-    pensionBoost:
-      Math.round(
-        (1 /
-          (1 -
-            calculateMarginalCombinedRelief(
-              item.marginalReliefRate,
-              withdrawalTaxRate
-            ))) *
-          1000
-      ) / 10,
-  }));
+  const { grossSalary, pensionContribution, potValue, annualWithdrawal } =
+    form.watch();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // This is just for form validation, we're using the values directly via watch()
@@ -168,9 +96,9 @@ export default function PensionCalculator() {
                             type="text"
                             {...field}
                             value={field.value === 0 ? "" : field.value}
-                            onChange={(e) =>
-                              field.onChange(handleNumberInput(e.target.value))
-                            }
+                            // onChange={(e) =>
+                            //   field.onChange(handleNumberInput(e.target.value))
+                            // }
                             className="w-[200px]"
                           />
                         </div>
@@ -295,56 +223,11 @@ export default function PensionCalculator() {
         </Card>
       </div>
 
-      {/* Tax Breakdowns Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Salary Tax Breakdown</CardTitle>
-            <CardDescription>Breakdown of your finances</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <TaxBreakdown
-              grossSalary={deferredGrossSalary}
-              pensionContribution={deferredPensionContribution}
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Withdrawal Tax Breakdown</CardTitle>
-            <CardDescription>
-              Analysis of taxes on pension withdrawals
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <WithdrawalBreakdown
-              potValue={deferredPotValue}
-              annualWithdrawal={deferredAnnualPensionWithdrawal}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid gap-8 mb-8">
-        <SalaryBreakdownChart
-          data={valuesByContrutributionData}
-          currentPension={deferredPensionContribution}
-        />
-        <MarginalROIChart
-          data={valuesByContrutributionData}
-          currentPension={deferredPensionContribution}
-        />
-        <TaxComparisonChart
-          data={valuesByContrutributionData}
-          currentPension={deferredPensionContribution}
-        />
-      </div>
-
-      <WithdrawalChart
-        data={withdrawalChartData}
-        currentWithdrawal={deferredAnnualPensionWithdrawal}
+      <PensionCalculations
+        grossSalary={grossSalary}
+        pensionContribution={pensionContribution}
+        potValue={potValue}
+        annualPensionWithdrawal={annualWithdrawal}
       />
     </div>
   );

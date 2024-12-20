@@ -34,7 +34,8 @@ export function WithdrawalBreakdown({
       <div>
         <h3 className="text-sm font-medium mb-2">Withdrawal Calculation</h3>
         <div className="text-xs text-muted-foreground mb-2">
-          The first 25% of your pension withdrawals are tax-free
+          25% tax-free allowance (capped at £1,073,100 pot) is spread across all
+          withdrawals
         </div>
         <Table>
           <TableBody>

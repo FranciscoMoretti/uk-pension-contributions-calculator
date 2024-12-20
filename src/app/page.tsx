@@ -227,10 +227,10 @@ export default function PensionCalculator() {
         </div>
 
         <BreakdownsAndResults
-          grossSalary={grossSalary}
-          pensionContribution={pensionContribution}
-          potValue={potValue}
-          annualPensionWithdrawal={annualWithdrawal}
+          grossSalary={Number(grossSalary)}
+          pensionContribution={Number(pensionContribution)}
+          potValue={Number(potValue)}
+          annualPensionWithdrawal={Number(annualWithdrawal)}
         />
 
         <footer className="mt-12 border-t pt-6 text-sm text-muted-foreground">

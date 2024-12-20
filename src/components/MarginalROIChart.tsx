@@ -29,7 +29,7 @@ export function MarginalROIChart({
 }: {
   data: ChartData[];
   currentPension: number;
-  title?: string;
+  title: string;
   xAxisLabel?: string;
 }) {
   const processedData = data.map((d) => ({

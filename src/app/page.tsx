@@ -70,7 +70,7 @@ export default function PensionCalculator() {
         </div>
       </nav>
 
-      <div className="container mx-auto py-2 sm:p-4 ">
+      <div className="container mx-auto py-2 md:p-4 ">
         <div className="flex flex-col gap-2 mb-10 px-3 sm:px-0">
           <h2 className="text-base ">
             Calculate how much you save through salary sacrifice pension
@@ -129,15 +129,15 @@ export default function PensionCalculator() {
                       <FormItem>
                         <FormLabel>Your Yearly Pension Contribution</FormLabel>
                         <FormControl>
-                          <div className="space-y-4 flex gap-4 items-center flex-wrap">
+                          <div className="flex gap-4 items-center w-full flex-wrap">
                             <Slider
                               value={[field.value]}
                               onValueChange={([value]) => field.onChange(value)}
                               max={Math.min(grossSalary, 60000)}
                               step={100}
-                              className="min-w-[200px] flex-1"
+                              className="min-w-[200px] flex-1 hidden md:block"
                             />
-                            <div className="flex items-center space-x-2 min-w-[100px]">
+                            <div className="flex items-center space-x-2 w-full ">
                               <span className="text-sm font-medium">£</span>
                               <Input
                                 type="number"

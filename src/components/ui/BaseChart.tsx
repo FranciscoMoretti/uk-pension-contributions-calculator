@@ -78,8 +78,8 @@ export function BaseChart({
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <ScrollArea className="w-[80dvw] sm:w-full">
-          <div className="w-full min-w-[600px]">
+        <ScrollArea className="w-[calc(100dvw-48px)] sm:w-full">
+          <div className="w-full min-w-[590px]">
             <ChartContainer config={config}>
               <ComposedChart
                 data={data}
@@ -195,7 +195,7 @@ export function BaseChart({
 
                 <Legend
                   verticalAlign="top"
-                  height={36}
+                  height={46}
                   formatter={(value) =>
                     config[value as keyof typeof config].label
                   }

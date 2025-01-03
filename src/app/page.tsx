@@ -106,7 +106,7 @@ export default function PensionCalculator() {
                     name="grossSalary"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Yearly Gross Salary</FormLabel>
+                        <FormLabel>Yearly Gross Total Salary</FormLabel>
                         <FormControl>
                           <div className="flex items-center space-x-2">
                             <span className="text-sm font-medium">£</span>
@@ -118,6 +118,10 @@ export default function PensionCalculator() {
                           </div>
                         </FormControl>
                         <FormMessage />
+                        <FormDescription>
+                          This is your gross total salary including bonuses,
+                          overtime, etc.
+                        </FormDescription>
                       </FormItem>
                     )}
                   />

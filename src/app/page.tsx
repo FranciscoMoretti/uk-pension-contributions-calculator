@@ -70,8 +70,8 @@ export default function PensionCalculator() {
         </div>
       </nav>
 
-      <div className="container mx-auto p-4">
-        <div className="flex flex-col gap-2 mb-10">
+      <div className="container mx-auto py-2 sm:p-4 ">
+        <div className="flex flex-col gap-2 mb-10 px-3 sm:px-0">
           <h2 className="text-base ">
             Calculate how much you save through salary sacrifice pension
             contributions - one of the most tax-efficient ways to save for
@@ -113,7 +113,7 @@ export default function PensionCalculator() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-[200px]"
+                              className="w-full sm:w-[200px]"
                             />
                           </div>
                         </FormControl>
@@ -142,7 +142,7 @@ export default function PensionCalculator() {
                               <Input
                                 type="number"
                                 {...field}
-                                className="w-[200px]"
+                                className="w-full sm:w-[200px]"
                               />
                             </div>
                           </div>
@@ -188,7 +188,7 @@ export default function PensionCalculator() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-[200px]"
+                              className="w-full sm:w-[200px]"
                             />
                           </div>
                         </FormControl>
@@ -212,7 +212,7 @@ export default function PensionCalculator() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-[200px]"
+                              className="w-full sm:w-[200px]"
                             />
                           </div>
                         </FormControl>
@@ -233,7 +233,7 @@ export default function PensionCalculator() {
           annualPensionWithdrawal={Number(annualWithdrawal)}
         />
 
-        <footer className="mt-12 border-t pt-6 text-sm text-muted-foreground">
+        <footer className="mt-12 border-t pt-6 text-sm text-muted-foreground px-3 sm:px-0">
           <p>
             This calculator is for illustrative purposes only. Tax rates and
             allowances may change. Always consult a financial advisor for

@@ -24,6 +24,7 @@ import {
 import { BreakdownsAndResults } from "@/components/BreakdownsAndResults";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
+import { CombinedInput } from "@/components/ui/CombinedInput";
 
 const formSchema = z.object({
   grossSalary: z.number().min(0).max(1000000),
@@ -113,7 +114,7 @@ export default function PensionCalculator() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-full sm:w-[200px]"
+                              className="w-full max-w-[200px]"
                             />
                           </div>
                         </FormControl>
@@ -129,23 +130,12 @@ export default function PensionCalculator() {
                       <FormItem>
                         <FormLabel>Your Yearly Pension Contribution</FormLabel>
                         <FormControl>
-                          <div className="flex gap-4 items-center w-full flex-wrap">
-                            <Slider
-                              value={[field.value]}
-                              onValueChange={([value]) => field.onChange(value)}
-                              max={Math.min(grossSalary, 60000)}
-                              step={100}
-                              className="min-w-[200px] flex-1 hidden md:block"
-                            />
-                            <div className="flex items-center space-x-2 w-full ">
-                              <span className="text-sm font-medium">£</span>
-                              <Input
-                                type="number"
-                                {...field}
-                                className="w-full sm:w-[200px]"
-                              />
-                            </div>
-                          </div>
+                          <CombinedInput
+                            value={field.value}
+                            onChange={field.onChange}
+                            total={grossSalary}
+                            maxValue={60000}
+                          />
                         </FormControl>
                         <FormDescription>
                           Your salary sacrifice contribution. Note: The annual
@@ -188,7 +178,7 @@ export default function PensionCalculator() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-full sm:w-[200px]"
+                              className="w-full max-w-[200px]"
                             />
                           </div>
                         </FormControl>
@@ -212,7 +202,7 @@ export default function PensionCalculator() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-full sm:w-[200px]"
+                              className="w-full max-w-[200px]"
                             />
                           </div>
                         </FormControl>

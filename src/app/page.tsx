@@ -138,10 +138,24 @@ export default function PensionCalculator() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Your salary sacrifice contribution. Note: The annual
-                          allowance of £60,000 includes both your and your
-                          employer&apos;s contributions. Your contribution
-                          cannot exceed your gross salary.
+                          Notes:
+                          <ul className="list-disc list-inside">
+                            <li>
+                              Enter only your personal contributions, not your
+                              employer's
+                            </li>
+                            <li>
+                              Your employer's contribtuions don't affect how
+                              much tax you save.
+                            </li>
+                            <li>
+                              The £60,000 annual allowance limit applies to
+                              combined personal and employer contributions
+                            </li>
+                            <li>
+                              You cannot contribute more than your gross salary
+                            </li>
+                          </ul>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

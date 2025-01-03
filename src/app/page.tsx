@@ -82,6 +82,10 @@ export default function PensionCalculator() {
             you&apos;re using salary sacrifice, where pension contributions are
             taken before tax and National Insurance, maximizing tax efficiency.
           </p>
+          <p className="text-sm text-muted-foreground">
+            <strong>Location:</strong> This calculator uses tax rates for
+            England and Wales - Scottish tax rates are different.
+          </p>
         </div>
 
         {/* All Inputs Section */}

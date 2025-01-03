@@ -6,7 +6,6 @@ interface CombinedInputProps {
   onChange: (value: number) => void;
   total: number;
   maxValue: number;
-  className?: string;
 }
 
 export function CombinedInput({
@@ -14,7 +13,6 @@ export function CombinedInput({
   onChange,
   total,
   maxValue,
-  className,
 }: CombinedInputProps) {
   const [internalValue, setInternalValue] = React.useState(value.toString());
   const [internalPercentage, setInternalPercentage] = React.useState(

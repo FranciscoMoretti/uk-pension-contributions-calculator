@@ -141,11 +141,11 @@ export default function PensionCalculator() {
                           <ul className="list-disc list-inside">
                             <li>
                               Enter only your personal contributions, not your
-                              employer's
+                              employer&apos;s
                             </li>
                             <li>
-                              Your employer's contribtuions don't affect how
-                              much tax you save.
+                              Your employer&apos;s contribtuions don&apos;t
+                              affect how much tax you save.
                             </li>
                             <li>
                               The £60,000 annual allowance limit applies to
